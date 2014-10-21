@@ -22,7 +22,7 @@ import main.utils.RandomWalk;
  */
 public class GraphSearcher
 {
-  private static final int INITIAL_CUTOFF = 10;
+  private static final int INITIAL_CUTOFF = 31;
   
   private final String filename;
   private final Graph graph;

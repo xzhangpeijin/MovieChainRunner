@@ -16,6 +16,7 @@ public class RandomWalk implements Runnable
 {
 	private final Graph graph;  
 	private final List<Integer> initstates;
+	private final Random random;
 
 	private final String filename;
 	private final AtomicInteger maxLength;
@@ -26,6 +27,8 @@ public class RandomWalk implements Runnable
 			AtomicInteger maxLength, Lock fileLock) {
 		this.graph = graph;
 		this.initstates = initstates;
+		this.random = new Random(System.nanoTime());
+		
 
 		this.filename = filename;
 		this.maxLength = maxLength;
@@ -35,8 +38,7 @@ public class RandomWalk implements Runnable
 	/**
 	 * Walks one random walk
 	 */
-	public void walkPath(List<Integer> path, long seed) {
-		Random random = new Random(seed);
+	public void walkPath(List<Integer> path) {
 		int start = random.nextInt(initstates.size());
 
 		Set<Integer> visited = new HashSet<Integer>();
@@ -82,7 +84,7 @@ public class RandomWalk implements Runnable
 	/**
 	 * Writes path to file
 	 */
-	public void writeResult(List<Integer> path, long seed) {
+	public void writeResult(List<Integer> path) {
 		fileLock.lock();
 		
 		// Check again in case it changed 
@@ -92,7 +94,6 @@ public class RandomWalk implements Runnable
 				
 				PrintWriter out = new PrintWriter(new FileWriter(new File(filename), true));
 				out.println("Path Length: " + path.size());
-				out.println("Seed: " + seed);
 				
 				StringBuffer buf = new StringBuffer();
 				for (int vertex : path) {
@@ -119,13 +120,11 @@ public class RandomWalk implements Runnable
 	{
 		List<Integer> path = new ArrayList<Integer>();
 		while (true) {
-			long seed = System.currentTimeMillis();
-			
-			walkPath(path, seed);
+			walkPath(path);
 			
 			// Check with atomic int so no context switch required
 			if (path.size() > maxLength.get()) {
-				writeResult(path, seed);
+				writeResult(path);
 			}
 			
 			path.clear();
