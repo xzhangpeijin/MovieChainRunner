@@ -1,4 +1,4 @@
-package main;
+package main.runners;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,7 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import utils.Graph;
+import main.utils.Graph;
+
 
 /**
  * Creates the initial full graph from the input file
@@ -17,23 +18,9 @@ import utils.Graph;
  * 
  * @author Peijin Zhang
  */
-public class CreateGraph
-{
-  private static final String SP = File.separator;
-  private static final String INPUT_PATH = CreateGraph.class.getResource(
-      SP + "MovieList.txt").getPath();
-  private static final String OUTPUT_PATH = "data/FullGraph.txt";
-  
-  public CreateGraph() throws IOException {
-    BufferedReader br = new BufferedReader(new FileReader(new File(INPUT_PATH)));
-    ArrayList<String> vertices = new ArrayList<String>();
-    
-    String nextline;
-    while ((nextline = br.readLine()) != null) {
-      vertices.add(nextline);
-    }
-    br.close();
-    
+public class GraphMaker
+{ 
+  public static Graph makeGraph(ArrayList<String> vertices) {
     Graph graph = new Graph(vertices);
     
     for (int x = 0; x < vertices.size(); x++) {
@@ -44,10 +31,23 @@ public class CreateGraph
       }
     }
     
-    graph.writeToFile(OUTPUT_PATH);
-  } 
+    return graph;
+  }
   
-  private boolean hasOverlap(String a, String b) {
+  public static Graph makeGraph(String input) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(new File(input)));
+    ArrayList<String> vertices = new ArrayList<String>();
+    
+    String nextline;
+    while ((nextline = br.readLine()) != null) {
+      vertices.add(nextline);
+    }
+    br.close();
+    
+    return makeGraph(vertices);
+  } 
+ 
+  private static boolean hasOverlap(String a, String b) {
     String[] atoks = a.split(" ");
     String[] btoks = b.split(" ");
     for (int x = 0; x < Math.min(atoks.length, btoks.length); x++) {
@@ -64,9 +64,5 @@ public class CreateGraph
       }
     }
     return false;
-  }
- 
-  public static void main(String[] args) throws Exception {
-    new CreateGraph();
   }
 }
