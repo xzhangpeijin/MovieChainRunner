@@ -34,80 +34,96 @@ public class Graph
   private String name;
 
   @SuppressWarnings("unchecked")
-  public Graph(List<String> vertices, String name) {
+  public Graph(List<String> vertices, String name)
+  {
     this.name = name;
     this.size = vertices.size();
     this.inedges = new LinkedList[size];
     this.outedges = new LinkedList[size];
     this.vertices = new ArrayList<String>(vertices);
 
-    for (int x = 0; x < size; x++) {
+    for (int x = 0; x < size; x++)
+    {
       inedges[x] = new LinkedList<Integer>();
       outedges[x] = new LinkedList<Integer>();
     }
   }
 
-  public Graph(List<String> vertices) {
+  public Graph(List<String> vertices)
+  {
     this(vertices, NO_NAME);
   }
 
-  public void addEdge(String from, String to) {
+  public void addEdge(String from, String to)
+  {
     addEdge(vertices.indexOf(from), vertices.indexOf(to));
   }
 
-  public void addEdge(int from, int to) {
+  public void addEdge(int from, int to)
+  {
     inedges[to].add(from);
     outedges[from].add(to);
   }
 
-  public int size() {
+  public int size()
+  {
     return size;
   }
 
-  public String getName() {
+  public String getName()
+  {
     return name;
   }
-  
-  public void setName(String name) {
+
+  public void setName(String name)
+  {
     this.name = name;
   }
 
-  public List<String> getVertices() {
+  public List<String> getVertices()
+  {
     return new ArrayList<String>(vertices);
   }
 
-  public List<Integer> getBothEdges(String vertex) {
+  public List<Integer> getBothEdges(String vertex)
+  {
     return getBothEdges(vertices.indexOf(vertex));
   }
 
-  public List<Integer> getBothEdges(int vertex) {
+  public List<Integer> getBothEdges(int vertex)
+  {
     Set<Integer> result = new HashSet<Integer>(inedges[vertex]);
     result.addAll(outedges[vertex]);
     return new LinkedList<Integer>(result);
   }
 
-  public List<Integer> getInEdges(String vertex) {
+  public List<Integer> getInEdges(String vertex)
+  {
     return getInEdges(vertices.indexOf(vertex));
   }
 
-  public List<Integer> getInEdges(int vertex) {
+  public List<Integer> getInEdges(int vertex)
+  {
     return new LinkedList<Integer>(inedges[vertex]);
   }
 
-  public List<Integer> getOutEdges(String vertex) {
+  public List<Integer> getOutEdges(String vertex)
+  {
     return getOutEdges(vertices.indexOf(vertex));
   }
 
-  public List<Integer> getOutEdges(int vertex) {
+  public List<Integer> getOutEdges(int vertex)
+  {
     return new LinkedList<Integer>(outedges[vertex]);
   }
-  
+
   /**
    * Writes graph to graphml format
    */
-  public void writeGraphML(String filename) throws IOException {
+  public void writeGraphML(String filename) throws IOException
+  {
     PrintWriter out = new PrintWriter(new FileWriter(new File(filename)));
-    
+
     out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     out.print("<graphml");
     out.print(" xmlns=\"http://graphml.graphdrawing.org/xmlns\"");
@@ -118,31 +134,35 @@ public class Graph
     out.println(" http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd\">");
     out.println("\t<key for=\"node\" id=\"d1\" yfiles.type=\"nodegraphics\"/>");
     out.format("\t<graph id=\"%s\" edgedefault=\"directed\">%n", name);
-    
-    for (int x = 0; x < size; x++) {
+
+    for (int x = 0; x < size; x++)
+    {
       out.format("\t\t<node id=\"%s\">%n", vertices.get(x));
       out.println("\t\t\t<data key=\"d1\">");
       out.println("\t\t\t\t<y:ShapeNode>");
-      out.format("\t\t\t\t\t<y:NodeLabel visible=\"true\" " +
-      		"autoSizePolicy=\"content\" fontFamily=\"Dialog\" " +
-      		"fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" " +
-      		"hasLineColor=\"false\" modelName=\"custom\" textColor=\"#000000\">" +
-      		"%s</y:NodeLabel>%n", x);
+      out.format(
+          "\t\t\t\t\t<y:NodeLabel visible=\"true\" "
+              + "autoSizePolicy=\"content\" fontFamily=\"Dialog\" "
+              + "fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" "
+              + "hasLineColor=\"false\" modelName=\"custom\" textColor=\"#000000\">"
+              + "%s</y:NodeLabel>%n", x);
       out.println("\t\t\t\t</y:ShapeNode>");
       out.println("\t\t\t</data>");
       out.println("\t\t</node>");
     }
-    
-    for (int x = 0; x < size; x++) {
-      for (int y = 0; y < outedges[x].size(); y++) {
-        out.format("\t\t<edge source=\"%s\" target=\"%s\"/>%n", 
+
+    for (int x = 0; x < size; x++)
+    {
+      for (int y = 0; y < outedges[x].size(); y++)
+      {
+        out.format("\t\t<edge source=\"%s\" target=\"%s\"/>%n",
             vertices.get(x), vertices.get(outedges[x].get(y)));
       }
     }
-    
+
     out.println("\t</graph>");
     out.println("</graphml>");
-    
+
     out.flush();
     out.close();
   }
@@ -150,31 +170,36 @@ public class Graph
   /*
    * Graph serialization specification:
    * 
-   * First line - Graph name
-   * Second line - n (Integer representing graph size IE number of vertices)
+   * First line - Graph name Second line - n (Integer representing graph size IE
+   * number of vertices)
    * 
    * Next n lines - Names of the n vertices
    * 
-   * Next n lines - Space separated integers, each integer represents an edge from vertex i to 
-   *                that integer. IE if on line 3 we have "1 5", then (3,1) and (3,5) are edges
+   * Next n lines - Space separated integers, each integer represents an edge
+   * from vertex i to that integer. IE if on line 3 we have "1 5", then (3,1)
+   * and (3,5) are edges
    */
 
   /**
    * Writes graph to file
    */
-  public void writeToFile(String filename) throws IOException {
+  public void writeToFile(String filename) throws IOException
+  {
     PrintWriter out = new PrintWriter(new FileWriter(new File(filename)));
 
     out.println(name);
     out.println(size);
 
-    for (int x = 0; x < size; x++) {
+    for (int x = 0; x < size; x++)
+    {
       out.println(vertices.get(x));
     }
 
-    for (int x = 0; x < size; x++) {
+    for (int x = 0; x < size; x++)
+    {
       StringBuffer buf = new StringBuffer();
-      for (int e : outedges[x]) {
+      for (int e : outedges[x])
+      {
         buf.append(e);
         buf.append(" ");
       }
@@ -186,26 +211,31 @@ public class Graph
   }
 
   /**
-   * Reads graph from file 
+   * Reads graph from file
    */
-  public static Graph readFromFile(String filename) throws IOException {
+  public static Graph readFromFile(String filename) throws IOException
+  {
     BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
 
     String name = br.readLine();
     int size = Integer.parseInt(br.readLine());
 
     ArrayList<String> vertices = new ArrayList<String>();
-    for (int x = 0; x < size; x++) {
+    for (int x = 0; x < size; x++)
+    {
       vertices.add(br.readLine());
     }
 
     Graph graph = new Graph(vertices, name);
 
-    for (int x = 0; x < size; x++) {
+    for (int x = 0; x < size; x++)
+    {
       String nextline = br.readLine();
-      if (nextline.length() > 0) {
+      if (nextline.length() > 0)
+      {
         String[] edges = nextline.split(" ");
-        for (int y = 0; y < edges.length; y++) {
+        for (int y = 0; y < edges.length; y++)
+        {
           graph.addEdge(x, Integer.parseInt(edges[y]));
         }
       }
