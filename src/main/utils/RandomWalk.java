@@ -21,7 +21,7 @@ public class RandomWalk
     
     hasout = new ArrayList<Integer>();
     for (int x = 0; x < graph.getSize(); x++) {
-      if (graph.getOutEdges(x).size() > 0) {
+      if (graph.getOutEdges(x).size() > 0 && graph.getInEdges(x).size() > 0) {
         hasout.add(x);
       }
     }
