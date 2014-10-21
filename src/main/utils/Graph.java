@@ -79,7 +79,7 @@ public class Graph
   public List<Integer> getBothEdges(int vertex) {
     Set<Integer> result = new HashSet<Integer>(inedges[vertex]);
     result.addAll(outedges[vertex]);
-    return new ArrayList<Integer>(result);
+    return new LinkedList<Integer>(result);
   }
 
   public List<Integer> getInEdges(String vertex) {
@@ -87,7 +87,7 @@ public class Graph
   }
 
   public List<Integer> getInEdges(int vertex) {
-    return new ArrayList<Integer>(inedges[vertex]);
+    return new LinkedList<Integer>(inedges[vertex]);
   }
 
   public List<Integer> getOutEdges(String vertex) {
@@ -95,7 +95,7 @@ public class Graph
   }
 
   public List<Integer> getOutEdges(int vertex) {
-    return new ArrayList<Integer>(outedges[vertex]);
+    return new LinkedList<Integer>(outedges[vertex]);
   }
 
 

@@ -28,7 +28,6 @@ public class RandomWalk implements Runnable
 		this.graph = graph;
 		this.initstates = initstates;
 		this.random = new Random(System.nanoTime());
-		
 
 		this.filename = filename;
 		this.maxLength = maxLength;
@@ -122,7 +121,7 @@ public class RandomWalk implements Runnable
 		while (true) {
 			walkPath(path);
 			
-			// Check with atomic int so no context switch required
+			// Check with atomic integer so no context switch required
 			if (path.size() > maxLength.get()) {
 				writeResult(path);
 			}
