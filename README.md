@@ -58,8 +58,7 @@ We perform forward bfs and backwards bfs on every node in the reduced graph, and
 
 ####Intelligent walking
 
-
-
+Note that when walking, we can see what our in and out vertices are. Consider the nodes reachable from each in and out vertex. If the size of that set plus our currently visited path is not larger than our target path length, then we can see that visiting that vertex would make it impossible to get a path that long anyways. Thus we can eliminate all such vertices at once, so we don’t accidentally say walk 40 nodes in from that vertex and get stuck.
 
 ##Improvements
 
@@ -69,4 +68,4 @@ Graph reduction reduced our size to 3240. Naive random walks on this graph produ
 
 First phase intelligent walking was to pass the walker a map of the reachable nodes from each node in the graph. We only select nodes whose reachable nodes are large enough such that if we were able to hit all those nodes, our final path would be more than 315. This improvement brought our path lengths up to around 175.
 
-Second pass intelligent walking was to generate reachability maps in real time. This means that we account for the fact that we cannot revisit any nodes already in our path.
+Second pass intelligent walking was to generate reachability maps in real time. This means that we account for the fact that we cannot revisit any nodes already in our path. However this also means that we have to calculate reachablility at every step, which is computationally intensive. This slows down our walk speed by a lot.

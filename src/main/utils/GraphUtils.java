@@ -14,8 +14,14 @@ import java.util.Set;
 public class GraphUtils {
   public static final int CANDIDATE_CUTOFF = 315;
   
-  public static Set<Integer> searchForward(Graph graph, int vertex) {
-    Set<Integer> reached = new HashSet<Integer>();
+  /**
+   * Searches using outgoing edges from a vertex and given a current set of visited nodes
+   * 
+   * Returns the set of nodes reachable from this vertex
+   */
+  public static Set<Integer> searchForward(Graph graph, int vertex, Set<Integer> visited) {
+    Set<Integer> reached = (visited == null) ? 
+        new HashSet<Integer>() : new HashSet<Integer>(visited);
     reached.add(vertex);
 
     Queue<Integer> bfs = new LinkedList<Integer>();
@@ -36,9 +42,19 @@ public class GraphUtils {
 
     return reached;
   }
+  
+  public static Set<Integer> searchForward(Graph graph, int vertex) {
+    return searchForward(graph, vertex, null);
+  }
 
-  public static Set<Integer> searchBackward(Graph graph, int vertex) {
-    Set<Integer> reached = new HashSet<Integer>();
+  /**
+   * Searches using ingoing edges from a vertex and given a current set of visited nodes
+   * 
+   * Returns the set of nodes reachable from this vertex
+   */
+  public static Set<Integer> searchBackward(Graph graph, int vertex, Set<Integer> visited) {
+    Set<Integer> reached = (visited == null) ? 
+        new HashSet<Integer>() : new HashSet<Integer>(visited);
     reached.add(vertex);
 
     Queue<Integer> bfs = new LinkedList<Integer>();
@@ -58,5 +74,9 @@ public class GraphUtils {
     }
 
     return reached;
+  }
+  
+  public static Set<Integer> searchBackward(Graph graph, int vertex) {
+    return searchBackward(graph, vertex, null);
   }
 }

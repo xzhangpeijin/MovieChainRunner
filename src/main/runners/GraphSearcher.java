@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import main.utils.Graph;
 import main.utils.GraphUtils;
-import main.utils.RandomWalker;
+import main.utils.FastWalker;
 
 /**
  * Searches for the longest path in a given graph
@@ -71,7 +71,7 @@ public class GraphSearcher {
     Lock fileLock = new ReentrantLock();
 
     for (int x = 0; x < threads; x++) {
-      Thread walker = new Thread(new RandomWalker(graph, initStates, fReachable, bReachable,
+      Thread walker = new Thread(new FastWalker(graph, initStates, fReachable, bReachable,
           filename, maxLength, fileLock));
       walker.start();
     }

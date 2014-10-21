@@ -10,13 +10,17 @@ import java.util.concurrent.locks.Lock;
 /**
  * Random walker for trying to find the longest path
  * 
+ * Uses initial memoization to keep track of the reachable nodes from every vertex, this makes
+ * state lookups at each walk decision extremely fast. However, not all memoized reachable
+ * nodes may actually be reachable since certain paths may include already visited nodes
+ * 
  * @author Peijin Zhang
  */
-public class RandomWalker extends Walker {
+public class FastWalker extends Walker {
   private final Set<Integer>[] fReachable;
   private final Set<Integer>[] bReachable;
 
-  public RandomWalker(Graph graph, List<Integer> initstates,
+  public FastWalker(Graph graph, List<Integer> initstates,
       Set<Integer>[] fReachable, Set<Integer>[] bReachable,  String filename,
       AtomicInteger maxLength, Lock fileLock) {
     super(graph, initstates, filename, maxLength, fileLock);
@@ -81,8 +85,8 @@ public class RandomWalker extends Walker {
   }
 
   private static class Candidate {
-    public int node;
-    public boolean forward;
+    public final int node;
+    public final boolean forward;
 
     public Candidate(int node, boolean forward) {
       this.node = node;

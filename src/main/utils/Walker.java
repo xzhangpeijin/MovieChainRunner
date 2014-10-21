@@ -14,9 +14,11 @@ import java.util.concurrent.locks.Lock;
  * Abstract class for walkers
  */
 public abstract class Walker implements Runnable {
-  final Graph graph;
-  final List<Integer> initstates;
-  final Random random;
+  protected boolean doneWalking;
+  
+  protected final Graph graph;
+  protected final List<Integer> initstates;
+  protected final Random random;
 
   private final String filename;
   private final AtomicInteger maxLength;
@@ -31,6 +33,8 @@ public abstract class Walker implements Runnable {
     this.filename = filename;
     this.maxLength = maxLength;
     this.fileLock = fileLock;
+    
+    doneWalking = false;
   }
 
   /**
@@ -56,8 +60,6 @@ public abstract class Walker implements Runnable {
     // Check again in case it changed
     if (path.size() > maxLength.get()) {
       try {
-        System.out.println(path.size());
-
         PrintWriter out = new PrintWriter(new FileWriter(new File(filename),
             true));
         out.println("Path Length: " + path.size());
@@ -85,7 +87,7 @@ public abstract class Walker implements Runnable {
   @Override
   public void run() {
     List<Integer> path = new ArrayList<Integer>();
-    while (true) {
+    while (!doneWalking) {
       walkPath(path);
       
       // Check with atomic integer so no context switch required
