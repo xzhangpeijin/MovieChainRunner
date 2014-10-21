@@ -5,11 +5,14 @@ CMU 15221 Project
 
 Usage Info:
 
+```
  * -h                Print usage info
  * -c                Create full graph from movie list
  * -s                Split full graph into components
  * -r [component]    Run on given component
                      Use -r A to run on all components with size > TARGET_LENGTH (315)
+ * -p [component]    Print the edge list for a component
+```
 
 All files are under /data
 

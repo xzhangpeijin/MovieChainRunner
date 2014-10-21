@@ -26,6 +26,7 @@ import main.utils.Graph;
  * -s                Split full graph into components
  * -r [component]    Run on given component
  *                   Use -r A to run on all components with size > TARGET_LENGTH
+ * -p [component]    Print the edge list for a component
  * 
  * @author Peijin Zhang
  */
@@ -138,7 +139,8 @@ public class Main
       System.out.println("-h                Usage info");
       System.out.println("-c                Create full graph from movie list");
       System.out.println("-s                Split full graph into components");
-      System.out.println("-r <component>    Run on given component");
+      System.out.println("-r [component]    Run on given component");
+      System.out.println("-p [component]    Print the edge list for a component");
       return;
     }
 
