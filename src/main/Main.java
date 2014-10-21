@@ -132,7 +132,7 @@ public class Main
 
   public static void main(String[] args) throws Exception {
     // Run without command line 
-    args = new String[]{"-r", "Component4.txt"};
+    args = new String[]{"-p", "Component4"};
 
     if (Arrays.binarySearch(args, "-h") >= 0) {
       System.out.println("Options:");
@@ -162,6 +162,26 @@ public class Main
         Main.searchGraph(component);
       } catch (IndexOutOfBoundsException e) {
         throw new IllegalArgumentException("Must specify component to run with -r");
+      }
+    }
+    
+    // Print edge list
+    int ploc = -1;
+    if ((ploc = Arrays.binarySearch(args, "-p")) >= 0) {
+      try {
+        String component = args[ploc + 1];
+        
+        URL componentDir = Main.class.getResource(COMPONENTS_DIR);
+        if (componentDir == null) {
+          throw new RuntimeException("Components not created, run -s first");
+        }
+        
+        String componentPath = componentDir.getPath() + SP + component + ".txt";
+        String outputPath = RESULT_DIR + SP + component + "Graph.graphml";
+        
+        Graph.readFromFile(componentPath).writeGraphML(outputPath);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Must specify component to run with -p");
       }
     }
   }

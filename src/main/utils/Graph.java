@@ -97,7 +97,34 @@ public class Graph
   public List<Integer> getOutEdges(int vertex) {
     return new LinkedList<Integer>(outedges[vertex]);
   }
-
+  
+  /**
+   * Writes graph to graphml format
+   */
+  public void writeGraphML(String filename) throws IOException {
+    PrintWriter out = new PrintWriter(new FileWriter(new File(filename)));
+    
+    out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    out.println("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\">");
+    out.format("\t<graph id=\"%s\" edgedefault=\"directed\">%n", name);
+    
+    for (int x = 0; x < size; x++) {
+      out.format("\t\t<node id=\"%s\"/>%n", vertices.get(x));
+    }
+    
+    for (int x = 0; x < size; x++) {
+      for (int y = 0; y < outedges[x].size(); y++) {
+        out.format("\t\t<edge source=\"%s\" target=\"%s\"/>%n", 
+            vertices.get(x), vertices.get(outedges[x].get(y)));
+      }
+    }
+    
+    out.println("\t</graph>");
+    out.println("</graphml>");
+    
+    out.flush();
+    out.close();
+  }
 
   /*
    * Graph serialization specification:
