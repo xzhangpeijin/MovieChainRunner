@@ -30,8 +30,8 @@ public class Graph
 
   private final List<String> vertices;
 
-  private final String name;
   private final int size;
+  private String name;
 
   @SuppressWarnings("unchecked")
   public Graph(List<String> vertices, String name) {
@@ -66,6 +66,10 @@ public class Graph
 
   public String getName() {
     return name;
+  }
+  
+  public void setName(String name) {
+    this.name = name;
   }
 
   public List<String> getVertices() {

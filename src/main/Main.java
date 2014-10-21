@@ -130,7 +130,7 @@ public class Main
 
   public static void main(String[] args) throws Exception {
     // Run without command line 
-    args = new String[]{"-p", "ReducedComponent"};
+    args = new String[]{"-p", "ReducedComponentTwoPass"};
 
     if (Arrays.binarySearch(args, "-h") >= 0) {
       System.out.println("Options:");
