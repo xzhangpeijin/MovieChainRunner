@@ -15,6 +15,7 @@ import main.runners.GraphMaker;
 import main.runners.GraphSearcher;
 import main.runners.GraphSplitter;
 import main.utils.Graph;
+import main.utils.ReduceGraph;
 
 
 /**
@@ -24,8 +25,9 @@ import main.utils.Graph;
  * -h                Usage info
  * -c                Create full graph from movie list
  * -s                Split full graph into components
+ * -d [graph]        Reduce a given graph
  * -r [graph]        Run on given graph
- * -p [graph]        Print the edge list for a graph
+ * -p [graph]        Print a graph to graphml format
  * 
  * @author Peijin Zhang
  */
@@ -99,6 +101,19 @@ public class Main
     out.flush();
     out.close();
   }
+  
+  public static void reduceGraph(String component) throws IOException {
+    URL componentDir = Main.class.getResource("/" + component + ".txt");
+    if (componentDir == null) {
+      throw new IllegalArgumentException("Graph does not exist");
+    }
+
+    String outputPath = "data" + SP + component + "Reduced.txt";
+
+    Graph input = Graph.readFromFile(componentDir.getPath());
+    Graph reduced = ReduceGraph.reduceGraph(input);
+    reduced.writeToFile(outputPath);
+  }
 
   /**
    * Starts a thread for each graph to search through
@@ -107,7 +122,7 @@ public class Main
   public static void searchGraph(String component) throws IOException {
     URL componentDir = Main.class.getResource("/" + component + ".txt");
     if (componentDir == null) {
-      throw new RuntimeException("Specified graph does not exist");
+      throw new IllegalArgumentException("Specified graph does not exist");
     }
 
     new GraphSearcher(componentDir.getPath(), RESULT_DIR).searchGraph();
@@ -115,15 +130,16 @@ public class Main
 
   public static void main(String[] args) throws Exception {
     // Run without command line 
-    args = new String[]{"-p", "LargeComponent"};
+    args = new String[]{"-p", "ReducedComponent"};
 
     if (Arrays.binarySearch(args, "-h") >= 0) {
       System.out.println("Options:");
       System.out.println("-h                Usage info");
       System.out.println("-c                Create full graph from movie list");
       System.out.println("-s                Split full graph into components");
+      System.out.println("-d [graph]        Reduce a given graph");
       System.out.println("-r [graph]        Run on given graph");
-      System.out.println("-p [graph]        Print the edge list for a graph");
+      System.out.println("-p [graph]        Print a graph to graphml format");
       return;
     }
 
@@ -136,6 +152,17 @@ public class Main
     if (Arrays.binarySearch(args, "-s") >= 0) {
       Main.splitComponents();
     }
+    
+    // Reduce a graph
+    int dloc = -1;
+    if ((dloc = Arrays.binarySearch(args, "-d")) >= 0) {
+      try {
+        String component = args[dloc + 1];
+        Main.reduceGraph(component);
+      } catch (IndexOutOfBoundsException e) {
+        throw new IllegalArgumentException("Must specify graph to run with -d");
+      }
+    }
 
     // Search for longest path
     int rloc = -1;
@@ -144,7 +171,7 @@ public class Main
         String component = args[rloc + 1];
         Main.searchGraph(component);
       } catch (IndexOutOfBoundsException e) {
-        throw new IllegalArgumentException("Must specify component to run with -r");
+        throw new IllegalArgumentException("Must specify graph to run with -r");
       }
     }
 
@@ -156,14 +183,14 @@ public class Main
 
         URL componentDir = Main.class.getResource("/" + component + ".txt");
         if (componentDir == null) {
-          throw new RuntimeException("Components not created, run -s first");
+          throw new IllegalArgumentException("Graph does not exist");
         }
 
         String outputPath = RESULT_DIR + SP + component + "Graph.graphml";
 
         Graph.readFromFile(componentDir.getPath()).writeGraphML(outputPath);
       } catch (IndexOutOfBoundsException e) {
-        throw new IllegalArgumentException("Must specify component to run with -p");
+        throw new IllegalArgumentException("Must specify graph to run with -p");
       }
     }
   }

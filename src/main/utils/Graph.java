@@ -69,7 +69,7 @@ public class Graph
   }
 
   public List<String> getVertices() {
-    return vertices;
+    return new ArrayList<String>(vertices);
   }
 
   public List<Integer> getBothEdges(String vertex) {
