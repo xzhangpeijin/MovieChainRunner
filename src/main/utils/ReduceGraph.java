@@ -1,9 +1,7 @@
 package main.utils;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
 import main.runners.GraphMaker;
@@ -41,10 +39,10 @@ public class ReduceGraph {
 
       Set<String> remove = new HashSet<String>();
       for (int x = 0; x < graph.size(); x++) {
-        Set<Integer> reached = searchForward(graph, x);
-        reached.addAll(searchBackward(graph, x));
+        Set<Integer> reached = GraphUtils.searchForward(graph, x);
+        reached.addAll(GraphUtils.searchBackward(graph, x));
 
-        if (reached.size() < 315) {
+        if (reached.size() < GraphUtils.CANDIDATE_CUTOFF) {
           remove.add(vertices.get(x));
         }
       }
@@ -85,14 +83,14 @@ public class ReduceGraph {
         Set<Integer>[] outreached = new Set[outedges.size() + 1];
 
         for (int y = 0; y < outedges.size(); y++) {
-          outreached[y] = searchForward(graph, outedges.get(y));
+          outreached[y] = GraphUtils.searchForward(graph, outedges.get(y));
         }
         outreached[outedges.size()] = new HashSet<Integer>();
 
         List<Integer> inedges = graph.getInEdges(x);
         Set<Integer>[] inreached = new Set[inedges.size() + 1];
         for (int y = 0; y < inedges.size(); y++) {
-          inreached[y] = searchBackward(graph, inedges.get(y));
+          inreached[y] = GraphUtils.searchBackward(graph, inedges.get(y));
         }
         inreached[inedges.size()] = new HashSet<Integer>();
 
@@ -104,7 +102,7 @@ public class ReduceGraph {
               reached.addAll(inreached[j]);
               reached.add(x);
 
-              if (reached.size() >= 315) {
+              if (reached.size() >= GraphUtils.CANDIDATE_CUTOFF) {
                 keep = true;
                 break outer;
               }
@@ -127,53 +125,5 @@ public class ReduceGraph {
     }
 
     return graph;
-  }
-
-  private static Set<Integer> searchForward(Graph graph, int vertex) {
-    Set<Integer> reached = new HashSet<Integer>();
-    reached.add(vertex);
-
-    Queue<Integer> bfs = new LinkedList<Integer>();
-    bfs.add(vertex);
-
-    while (bfs.size() > 0) {
-      int cur = bfs.poll();
-      ;
-
-      List<Integer> edges = graph.getOutEdges(cur);
-
-      for (int edge : edges) {
-        if (!reached.contains(edge)) {
-          reached.add(edge);
-          bfs.add(edge);
-        }
-      }
-    }
-
-    return reached;
-  }
-
-  private static Set<Integer> searchBackward(Graph graph, int vertex) {
-    Set<Integer> reached = new HashSet<Integer>();
-    reached.add(vertex);
-
-    Queue<Integer> bfs = new LinkedList<Integer>();
-    bfs.add(vertex);
-
-    while (bfs.size() > 0) {
-      int cur = bfs.poll();
-      ;
-
-      List<Integer> edges = graph.getInEdges(cur);
-
-      for (int edge : edges) {
-        if (!reached.contains(edge)) {
-          reached.add(edge);
-          bfs.add(edge);
-        }
-      }
-    }
-
-    return reached;
   }
 }

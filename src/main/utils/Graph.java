@@ -36,8 +36,8 @@ public class Graph {
   public Graph(List<String> vertices, String name) {
     this.name = name;
     this.size = vertices.size();
-    this.inedges = new LinkedList[size];
-    this.outedges = new LinkedList[size];
+    this.inedges = new List[size];
+    this.outedges = new List[size];
     this.vertices = new ArrayList<String>(vertices);
 
     for (int x = 0; x < size; x++) {

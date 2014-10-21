@@ -12,20 +12,32 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * Random walker for trying to find the longest path
+ * 
+ * @author Peijin Zhang
+ */
 public class RandomWalk implements Runnable {
   private final Graph graph;
   private final List<Integer> initstates;
   private final Random random;
 
+  private final Set<Integer>[] fReachable;
+  private final Set<Integer>[] bReachable;
+
   private final String filename;
   private final AtomicInteger maxLength;
   private final Lock fileLock;
 
-  public RandomWalk(Graph graph, List<Integer> initstates, String filename,
+  public RandomWalk(Graph graph, List<Integer> initstates,
+      Set<Integer>[] fReachable, Set<Integer>[] bReachable,  String filename,
       AtomicInteger maxLength, Lock fileLock) {
     this.graph = graph;
     this.initstates = initstates;
     this.random = new Random(System.nanoTime());
+
+    this.fReachable = fReachable;
+    this.bReachable = bReachable;
 
     this.filename = filename;
     this.maxLength = maxLength;
@@ -39,32 +51,63 @@ public class RandomWalk implements Runnable {
     int start = random.nextInt(initstates.size());
 
     Set<Integer> visited = new HashSet<Integer>();
+    visited.add(start);
+    
+    int head = start;
+    int tail = start;
+    
+    List<Candidate> candidates = new ArrayList<Candidate>();
 
-    int cur = start;
-    visited.add(cur);
+    do {
+      candidates.clear();
+      
+      for (int edge : graph.getOutEdges(head)) {
+        if (!visited.contains(edge)) {
+          Set<Integer> reachable = new HashSet<Integer>(fReachable[edge]);
+          reachable.addAll(visited);
+          if (reachable.size() >= GraphUtils.CANDIDATE_CUTOFF) {
+            candidates.add(new Candidate(edge, true));
+          }
+        }
+      }
+      for (int edge : graph.getInEdges(tail)) {
+        if (!visited.contains(edge)) {
+          Set<Integer> reachable = new HashSet<Integer>(bReachable[edge]);
+          reachable.addAll(visited);
+          if (reachable.size() >= GraphUtils.CANDIDATE_CUTOFF) {
+            candidates.add(new Candidate(edge, false));
+          }
+        }
+      }
 
-    List<Integer> outedges = graph.getOutEdges(cur);
-    while (outedges.size() > 0) {
-      int next = random.nextInt(outedges.size());
-      cur = outedges.get(next);
-      visited.add(cur);
-      path.add(cur);
+      if (candidates.size() > 0) {
+        int move = random.nextInt(candidates.size());
+        Candidate next = candidates.get(move);
+        
+        int node = next.node;
+        visited.add(node);
+        
+        if (next.forward) {
+          path.add(node);
+          head = node;
+        } else {
+          path.add(0, node);
+          tail = node;
+        }
+      }
+      
+    } while (candidates.size() > 0);
+  }
 
-      outedges = graph.getOutEdges(cur);
-      outedges.removeAll(visited);
+  private static class Candidate {
+    public int node;
+    public boolean forward;
+
+    public Candidate(int node, boolean forward) {
+      this.node = node;
+      this.forward = forward;
     }
 
-    List<Integer> inedges = graph.getInEdges(start);
-    inedges.removeAll(visited);
-    while (inedges.size() > 0) {
-      int next = random.nextInt(inedges.size());
-      cur = inedges.get(next);
-      visited.add(cur);
-      path.add(0, cur);
-
-      inedges = graph.getInEdges(cur);
-      inedges.removeAll(visited);
-    }
   }
 
   /*
@@ -81,7 +124,7 @@ public class RandomWalk implements Runnable {
    */
   public void writeResult(List<Integer> path) {
     fileLock.lock();
-
+    
     // Check again in case it changed
     if (path.size() > maxLength.get()) {
       try {
@@ -116,7 +159,7 @@ public class RandomWalk implements Runnable {
     List<Integer> path = new ArrayList<Integer>();
     while (true) {
       walkPath(path);
-
+      
       // Check with atomic integer so no context switch required
       if (path.size() > maxLength.get()) {
         writeResult(path);

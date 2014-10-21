@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import main.utils.Graph;
+import main.utils.GraphUtils;
 import main.utils.RandomWalk;
 
 /**
@@ -21,7 +23,7 @@ import main.utils.RandomWalk;
  * @author Peijin Zhang
  */
 public class GraphSearcher {
-  private static final int INITIAL_CUTOFF = 39;
+  private static final int INITIAL_CUTOFF = 129;
 
   private final String filename;
   private final Graph graph;
@@ -46,21 +48,33 @@ public class GraphSearcher {
     this(Graph.readFromFile(path), output);
   }
 
+  @SuppressWarnings("unchecked")
   public void searchGraph() {
+    // Do some pre-processing to save each subthread the work
+    
     List<Integer> initStates = new ArrayList<Integer>();
     for (int x = 0; x < graph.size(); x++) {
       if (graph.getInEdges(x).size() > 0 && graph.getOutEdges(x).size() > 0) {
         initStates.add(x);
       }
     }
+    
+    Set<Integer>[] fReachable = new Set[graph.size()];
+    Set<Integer>[] bReachable = new Set[graph.size()];
+    
+    for (int x = 0; x < graph.size(); x++) {
+      fReachable[x] = GraphUtils.searchForward(graph, x);
+      bReachable[x] = GraphUtils.searchBackward(graph, x);
+    }
 
     AtomicInteger maxLength = new AtomicInteger(INITIAL_CUTOFF);
     Lock fileLock = new ReentrantLock();
 
     for (int x = 0; x < threads; x++) {
-      Thread walker = new Thread(new RandomWalk(graph, initStates, filename,
-          maxLength, fileLock));
+      Thread walker = new Thread(new RandomWalk(graph, initStates, fReachable, bReachable,
+          filename, maxLength, fileLock));
       walker.start();
     }
   }
+  
 }

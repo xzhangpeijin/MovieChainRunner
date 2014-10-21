@@ -128,7 +128,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     // Run without command line
-    args = new String[] { "-d", "LargeComponent" };
+    args = new String[] { "-r", "ReducedGraph" };
 
     if (Arrays.binarySearch(args, "-h") >= 0) {
       System.out.println("Options:");

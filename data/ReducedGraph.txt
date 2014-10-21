@@ -1,4 +1,4 @@
-ReducedComponent
+ReducedGraph
 3240
 10 ITEMS OR LESS
 LESS THAN ZERO
