@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,13 +37,13 @@ public class Graph
   public Graph(List<String> vertices, String name) {
     this.name = name;
     this.size = vertices.size();
-    this.inedges = new ArrayList[size];
-    this.outedges = new ArrayList[size];
+    this.inedges = new LinkedList[size];
+    this.outedges = new LinkedList[size];
     this.vertices = new ArrayList<String>(vertices);
 
     for (int x = 0; x < size; x++) {
-      inedges[x] = new ArrayList<Integer>();
-      outedges[x] = new ArrayList<Integer>();
+      inedges[x] = new LinkedList<Integer>();
+      outedges[x] = new LinkedList<Integer>();
     }
   }
 
