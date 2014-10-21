@@ -5,23 +5,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import main.utils.Graph;
 
 
 /**
- * Creates the initial full graph from the input file
- * INPUT_PATH and OUTPUT_PATH are the locations of the input movie file and output file for the
- * full graph, respectively
- * 
- * This should only be run once. Runtime is approximately 1 minute
+ * Creates a graph using a set of input vertices 
  * 
  * @author Peijin Zhang
  */
 public class GraphMaker
 { 
-  public static Graph makeGraph(ArrayList<String> vertices) {
-    Graph graph = new Graph(vertices);
+  /**
+   * Makes a graph from a list of vertex names
+   */
+  public static Graph makeGraph(List<String> vertices, String name) {
+    Graph graph = new Graph(vertices, name);
     
     for (int x = 0; x < vertices.size(); x++) {
       for (int y = 0; y < vertices.size(); y++) {
@@ -34,9 +34,12 @@ public class GraphMaker
     return graph;
   }
   
-  public static Graph makeGraph(String input) throws IOException {
+  /**
+   * Makes a graph from a file containing vertex names
+   */
+  public static Graph makeGraph(String input, String name) throws IOException {
     BufferedReader br = new BufferedReader(new FileReader(new File(input)));
-    ArrayList<String> vertices = new ArrayList<String>();
+    List<String> vertices = new ArrayList<String>();
     
     String nextline;
     while ((nextline = br.readLine()) != null) {
@@ -44,7 +47,7 @@ public class GraphMaker
     }
     br.close();
     
-    return makeGraph(vertices);
+    return makeGraph(vertices, name);
   } 
  
   private static boolean hasOverlap(String a, String b) {

@@ -1,9 +1,15 @@
 package main;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import main.runners.GraphMaker;
 import main.runners.GraphSearcher;
@@ -28,38 +34,87 @@ public class Main
   private static final int TARGET_LENGTH = 315;
 
   private static final String SP = File.separator;
-  private static final String MOVIE_LIST = "data" + SP + "MovieList.txt";
-  private static final String FULL_GRAPH = "data" + SP + "FullGraph.txt";
-  private static final String COMPONENTS_DIR = "data" + SP + "components";
+  private static final String MOVIE_LIST = SP + "MovieList.txt";
+  private static final String FULL_GRAPH = SP + "FullGraph.txt";
+  private static final String COMPONENTS_DIR = SP + "components";
   private static final String RESULT_DIR = "results";
-  
+
+  /**
+   * Creates the full graph from the input movie list
+   */
   public static void makeFullGraph() throws IOException {
-    String movie = Main.class.getResource(SP + MOVIE_LIST).getPath();
-    Graph fullGraph = GraphMaker.makeGraph(movie);
-    fullGraph.writeToFile(FULL_GRAPH);
+    URL movie = Main.class.getResource(MOVIE_LIST);
+    if (movie == null) {
+      throw new RuntimeException("Movie List not found");
+    }
+
+    Graph fullGraph = GraphMaker.makeGraph(movie.getPath(), "FullGraph");
+    fullGraph.writeToFile("data" + FULL_GRAPH);
   }
-  
+
+  /**
+   * Splits the full graph into connected components
+   */
   public static void splitComponents() throws IOException {
-    String fullgraph = Main.class.getResource(SP + FULL_GRAPH).getPath();
+    URL fullgraph = Main.class.getResource(FULL_GRAPH);
     if (fullgraph == null) {
       throw new RuntimeException("Full graph not created, run -c first");
     }
-    
-    Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph);
-    int number = 1;
+
+    Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph.getPath());
     for (Graph graph : graphs) {
-      graph.writeToFile(COMPONENTS_DIR + SP + "Component" + number + ".txt");
-      number++;
+      if (graph.getSize() >= 10) {
+        graph.writeToFile("data" + COMPONENTS_DIR + SP + graph.getName() + ".txt");
+      }
     }
+
+    printSummary(graphs);
   }
-  
+
+  private static void printSummary(Set<Graph> graphs) throws IOException {
+    PrintWriter out = new PrintWriter(new FileWriter(new File(
+        RESULT_DIR + SP + "ComponentSummary.txt")));
+
+    out.println("Total graphs: " + graphs.size());
+    TreeMap<Integer, ArrayList<Graph>> sizes = new TreeMap<Integer, ArrayList<Graph>>();
+    for (Graph graph : graphs) {
+      int size = graph.getSize();
+      if (!sizes.containsKey(size)) {
+        sizes.put(size, new ArrayList<Graph>());
+      } 
+      sizes.get(size).add(graph);
+    }
+
+    for (Entry<Integer, ArrayList<Graph>> entry : sizes.entrySet()) {
+      int size = entry.getKey();
+      ArrayList<Graph> sizegraphs = entry.getValue();
+      out.format("Size %d: %d%n", size, sizegraphs.size());
+      StringBuffer buf = new StringBuffer();
+      for (int x = 0; x < sizegraphs.size(); x++) {
+        if (x != 0) {
+          buf.append(" ");
+        }
+        buf.append(sizegraphs.get(x).getName());
+      }
+      out.println(buf.toString());
+    }
+
+    out.flush();
+    out.close();
+  }
+
   /**
    * Starts a thread for each graph to search through
    * Each thread will write results to a result directory in the format [component]Results.txt
    */
   public static void searchGraph(String component) throws IOException {
-    if (component.equals("A")) {
-      File[] componentFiles = new File(COMPONENTS_DIR).listFiles();
+    URL componentDir = Main.class.getResource(COMPONENTS_DIR);
+    if (componentDir == null) {
+      throw new RuntimeException("Components not created, run -s first");
+    }
+
+    if (component.equals("A")) {      
+      File[] componentFiles = new File(componentDir.getPath()).listFiles();
       for (File file : componentFiles) {
         String path = file.getCanonicalPath();
         if (path.contains(".txt")) {
@@ -70,14 +125,14 @@ public class Main
         }
       }
     } else {
-      new Thread(new GraphSearcher(COMPONENTS_DIR + SP + component, RESULT_DIR)).start();
+      new Thread(new GraphSearcher(componentDir.getPath() + SP + component, RESULT_DIR)).start();
     }
   }
 
   public static void main(String[] args) throws Exception {
     // Run without command line 
-    args = new String[]{"-c"};
-    
+    args = new String[]{"-r", "Component4.txt"};
+
     if (Arrays.binarySearch(args, "-h") >= 0) {
       System.out.println("Options:");
       System.out.println("-h                Usage info");
@@ -86,17 +141,17 @@ public class Main
       System.out.println("-r <component>    Run on given component");
       return;
     }
-    
+
     // Create full graph
     if (Arrays.binarySearch(args, "-c") >= 0) {
       Main.makeFullGraph();
     }
-    
+
     // Split full graph into components
     if (Arrays.binarySearch(args, "-s") >= 0) {
       Main.splitComponents();
     }
-    
+
     // Search for longest path
     int rloc = -1;
     if ((rloc = Arrays.binarySearch(args, "-r")) >= 0) {
