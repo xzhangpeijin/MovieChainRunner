@@ -59,7 +59,7 @@ public class Graph
     outedges[from].add(to);
   }
 
-  public int getSize() {
+  public int size() {
     return size;
   }
 

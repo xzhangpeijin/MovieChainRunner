@@ -1,9 +1,12 @@
 package main.runners;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import main.utils.Graph;
 import main.utils.RandomWalk;
@@ -13,65 +16,50 @@ import main.utils.RandomWalk;
  * 
  * Writes all intermediate results to file
  * 
+ * Runs one thread per core in random walk unless specified
+ * 
  * @author Peijin Zhang
  */
-public class GraphSearcher implements Runnable
+public class GraphSearcher
 {
   private static final int INITIAL_CUTOFF = 10;
-  private final Graph graph;
+  
   private final String filename;
+  private final Graph graph;
+  private final int threads;
 
-  public GraphSearcher(Graph graph, String output) {
+  public GraphSearcher(Graph graph, String output, int threads) {
     this.graph = graph;
     this.filename = output + File.separator + graph.getName() + "Results.txt";
-  }
-
-  public GraphSearcher(String path, String output) throws IOException {
-    this(Graph.readFromFile(path), output);
+    this.threads = threads;
   }
   
-  /*
-   * Result file format
-   * 
-   * Paths come in 3 lines:
-   *   Line 1: Length of the path
-   *   Line 2: Seed used to generate the path
-   *   Line 3: Space separated vertices for the path
-   *   
-   * Paths in the file are guaranteed to be in strictly increasing path length
-   */
+  public GraphSearcher(Graph graph, String output) {
+  	this(graph, output, Math.max(1, Runtime.getRuntime().availableProcessors()));
+  }
 
-  @Override
-  public void run()
-  {
-    int maxlength = INITIAL_CUTOFF;
-
-    RandomWalk walker = new RandomWalk(graph);
-    while (true) {
-      long seed = System.currentTimeMillis();
-      walker.walk(seed);
-      if (walker.getSize() > maxlength) {
-        maxlength = walker.getSize();
-        System.out.println(maxlength);
-        try {
-          PrintWriter out = new PrintWriter(new FileWriter(new File(filename), true));
-          out.println("Length: " + walker.getSize());
-          out.println("Seed : " + seed);
-          
-          StringBuffer buf = new StringBuffer();
-          for (int vertex : walker.getPath()) { 
-            buf.append(vertex);
-            buf.append(" ");
-          }
-          out.println(buf.toString().trim());
-
-          out.flush();
-          out.close();
-        } catch (IOException e) {
-          System.err.println("Error writing to " + filename);
-          e.printStackTrace();
-        }
-      }
-    }
+  public GraphSearcher(String path, String output, int threads) throws IOException {
+  	this(Graph.readFromFile(path), output, threads);
+  }
+  
+  public GraphSearcher(String path, String output) throws IOException {
+  	this(Graph.readFromFile(path), output);
+  }
+  
+  public void searchGraph() {
+  	List<Integer> initStates = new ArrayList<Integer>();
+  	for (int x = 0; x < graph.size(); x++) {
+  		if (graph.getInEdges(x).size() > 0 && graph.getOutEdges(x).size() > 0) {
+  			initStates.add(x);
+  		}
+  	}
+  	
+  	AtomicInteger maxLength = new AtomicInteger(INITIAL_CUTOFF);
+    Lock fileLock = new ReentrantLock();
+  	
+  	for (int x = 0; x < threads; x++) {
+  		Thread walker = new Thread(new RandomWalk(graph, initStates, filename, maxLength, fileLock));
+  		walker.start();
+  	}
   }
 }

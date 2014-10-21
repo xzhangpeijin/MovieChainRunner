@@ -34,9 +34,9 @@ public class Main
   private static final int TARGET_LENGTH = 315;
 
   private static final String SP = File.separator;
-  private static final String MOVIE_LIST = SP + "MovieList.txt";
-  private static final String FULL_GRAPH = SP + "FullGraph.txt";
-  private static final String COMPONENTS_DIR = SP + "components";
+  private static final String MOVIE_LIST = "/MovieList.txt";
+  private static final String FULL_GRAPH = "/FullGraph.txt";
+  private static final String COMPONENTS_DIR = "/components";
   private static final String RESULT_DIR = "results";
 
   /**
@@ -63,7 +63,7 @@ public class Main
 
     Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph.getPath());
     for (Graph graph : graphs) {
-      if (graph.getSize() >= 10) {
+      if (graph.size() >= 10) {
         graph.writeToFile("data" + COMPONENTS_DIR + SP + graph.getName() + ".txt");
       }
     }
@@ -78,7 +78,7 @@ public class Main
     out.println("Total graphs: " + graphs.size());
     TreeMap<Integer, ArrayList<Graph>> sizes = new TreeMap<Integer, ArrayList<Graph>>();
     for (Graph graph : graphs) {
-      int size = graph.getSize();
+      int size = graph.size();
       if (!sizes.containsKey(size)) {
         sizes.put(size, new ArrayList<Graph>());
       } 
@@ -119,13 +119,13 @@ public class Main
         String path = file.getCanonicalPath();
         if (path.contains(".txt")) {
           Graph graph = Graph.readFromFile(path);
-          if (graph.getSize() >= TARGET_LENGTH) {
-            new Thread(new GraphSearcher(graph, RESULT_DIR)).start();
+          if (graph.size() >= TARGET_LENGTH) {
+          	new GraphSearcher(graph, RESULT_DIR, 1).searchGraph();
           }
         }
       }
     } else {
-      new Thread(new GraphSearcher(componentDir.getPath() + SP + component, RESULT_DIR)).start();
+    	new GraphSearcher(componentDir.getPath() + SP + component, RESULT_DIR).searchGraph();
     }
   }
 

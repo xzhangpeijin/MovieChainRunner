@@ -21,7 +21,7 @@ public class GraphSplitter
     Set<Graph> graphs = new HashSet<Graph>();
     List<String> vertexset = graph.getVertices();
     
-    int size = graph.getSize();
+    int size = graph.size();
     Set<Integer> remain = new HashSet<Integer>();
     for (int x = 0; x < size; x++) {
       remain.add(x);
