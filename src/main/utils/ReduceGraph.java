@@ -19,7 +19,7 @@ public class ReduceGraph
 
   public static Graph reduceGraph(Graph graph) {
     String newname = "Reduced" + graph.getName();
-    graph = secondPass(firstPass(graph));
+    graph = firstPass(graph);
     graph.setName(newname);
 
     return graph;
@@ -43,7 +43,7 @@ public class ReduceGraph
       for (int x = 0; x < graph.size(); x++) {
         Set<Integer> reached = searchForward(graph, x);
         reached.addAll(searchBackward(graph, x));
-
+        
         if (reached.size() < 315) {
           remove.add(vertices.get(x));
         }
@@ -51,9 +51,6 @@ public class ReduceGraph
 
       System.out.println(remove.size());
       if (remove.size() > 0) {
-        for (String vertex : remove) {
-          System.out.println(vertex);
-        }
         removed = true;
         vertices.removeAll(remove);
 
@@ -72,8 +69,10 @@ public class ReduceGraph
    * Search backwards from all in vertices
    * 
    * If all pairs of reachable points from an in vertex and out vertex are less than 315, kill node
+   * 
+   * DEPRECATED: This does no better than the first pass algorithm
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "unused" })
   private static Graph secondPass(Graph graph) {
     boolean removed = true;
     while (removed) {
@@ -84,16 +83,19 @@ public class ReduceGraph
       Set<String> remove = new HashSet<String>();
       for (int x = 0; x < graph.size(); x++) {
         List<Integer> outedges = graph.getOutEdges(x);
-        Set<Integer>[] outreached = new Set[outedges.size()];
+        Set<Integer>[] outreached = new Set[outedges.size() + 1];
+         
         for (int y = 0; y < outedges.size(); y++) {
-          outreached[y] = searchForward(graph, y);
+          outreached[y] = searchForward(graph, outedges.get(y));
         }
+        outreached[outedges.size()] = new HashSet<Integer>();
 
-        List<Integer> inedges = graph.getOutEdges(x);
-        Set<Integer>[] inreached = new Set[inedges.size()];
+        List<Integer> inedges = graph.getInEdges(x);
+        Set<Integer>[] inreached = new Set[inedges.size() + 1];
         for (int y = 0; y < inedges.size(); y++) {
-          inreached[y] = searchBackward(graph, y);
+          inreached[y] = searchBackward(graph, inedges.get(y));
         }
+        inreached[inedges.size()] = new HashSet<Integer>();
 
         boolean keep = false;
         outer : {
