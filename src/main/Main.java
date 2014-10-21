@@ -24,20 +24,17 @@ import main.utils.Graph;
  * -h                Usage info
  * -c                Create full graph from movie list
  * -s                Split full graph into components
- * -r [component]    Run on given component
+ * -r [graph]        Run on given graph
  *                   Use -r A to run on all components with size > TARGET_LENGTH
- * -p [component]    Print the edge list for a component
+ * -p [graph]        Print the edge list for a graph
  * 
  * @author Peijin Zhang
  */
 public class Main
 {
-  private static final int TARGET_LENGTH = 315;
-
   private static final String SP = File.separator;
   private static final String MOVIE_LIST = "/MovieList.txt";
   private static final String FULL_GRAPH = "/FullGraph.txt";
-  private static final String COMPONENTS_DIR = "/components";
   private static final String RESULT_DIR = "results";
 
   /**
@@ -65,7 +62,7 @@ public class Main
     Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph.getPath());
     for (Graph graph : graphs) {
       if (graph.size() >= 10) {
-        graph.writeToFile("data" + COMPONENTS_DIR + SP + graph.getName() + ".txt");
+        graph.writeToFile("data" + SP + graph.getName() + ".txt");
       }
     }
 
@@ -109,25 +106,12 @@ public class Main
    * Each thread will write results to a result directory in the format [component]Results.txt
    */
   public static void searchGraph(String component) throws IOException {
-    URL componentDir = Main.class.getResource(COMPONENTS_DIR);
+    URL componentDir = Main.class.getResource("/" + component + ".txt");
     if (componentDir == null) {
-      throw new RuntimeException("Components not created, run -s first");
+      throw new RuntimeException("Specified graph does not exist");
     }
 
-    if (component.equals("A")) {      
-      File[] componentFiles = new File(componentDir.getPath()).listFiles();
-      for (File file : componentFiles) {
-        String path = file.getCanonicalPath();
-        if (path.contains(".txt")) {
-          Graph graph = Graph.readFromFile(path);
-          if (graph.size() >= TARGET_LENGTH) {
-          	new GraphSearcher(graph, RESULT_DIR, 1).searchGraph();
-          }
-        }
-      }
-    } else {
-    	new GraphSearcher(componentDir.getPath() + SP + component, RESULT_DIR).searchGraph();
-    }
+    new GraphSearcher(componentDir.getPath(), RESULT_DIR).searchGraph();
   }
 
   public static void main(String[] args) throws Exception {
@@ -139,8 +123,8 @@ public class Main
       System.out.println("-h                Usage info");
       System.out.println("-c                Create full graph from movie list");
       System.out.println("-s                Split full graph into components");
-      System.out.println("-r [component]    Run on given component");
-      System.out.println("-p [component]    Print the edge list for a component");
+      System.out.println("-r [graph]        Run on given graph");
+      System.out.println("-p [graph]        Print the edge list for a graph");
       return;
     }
 
@@ -164,22 +148,21 @@ public class Main
         throw new IllegalArgumentException("Must specify component to run with -r");
       }
     }
-    
+
     // Print edge list
     int ploc = -1;
     if ((ploc = Arrays.binarySearch(args, "-p")) >= 0) {
       try {
         String component = args[ploc + 1];
-        
-        URL componentDir = Main.class.getResource(COMPONENTS_DIR);
+
+        URL componentDir = Main.class.getResource("/" + component + ".txt");
         if (componentDir == null) {
           throw new RuntimeException("Components not created, run -s first");
         }
-        
-        String componentPath = componentDir.getPath() + SP + component + ".txt";
+
         String outputPath = RESULT_DIR + SP + component + "Graph.graphml";
-        
-        Graph.readFromFile(componentPath).writeGraphML(outputPath);
+
+        Graph.readFromFile(componentDir.getPath()).writeGraphML(outputPath);
       } catch (IndexOutOfBoundsException e) {
         throw new IllegalArgumentException("Must specify component to run with -p");
       }

@@ -9,18 +9,17 @@ Usage Info:
  * -h                Print usage info
  * -c                Create full graph from movie list
  * -s                Split full graph into components
- * -r [component]    Run on given component
-                     Use -r A to run on all components with size > 315
- * -p [component]    Print the edge list for a component
+ * -r [graph]        Run on given graph
+ * -p [graph]        Print a given graph to graphml format
 ```
 
 All files are under /data
 
 * MovieList - Input of all movie titles
 * FullGraph - Initial graph 
-* components/ComponentX - Xth component of the graph 
+* Additional graphs - Graphs after processing
 
-Results will be outputted under /results/[Component]Results.txt
+Results will be outputted under /results/[Graph]Results.txt
 
 Note: All txt files under the components directory are treated as components when running -r A
 
