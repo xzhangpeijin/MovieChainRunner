@@ -25,6 +25,12 @@ public class ReduceGraph
     return graph;
   }
 
+  /**
+   * First pass reduction
+   * 
+   * Searches forwards and backwards from each node
+   * If < 315 points are reached this way, kill node
+   */
   private static Graph firstPass(Graph graph) {
 
     boolean removed = true;
@@ -58,6 +64,15 @@ public class ReduceGraph
     return graph;
   }
 
+  /**
+   * Second pass reduction
+   * Finds all vertices going into and out from a vertex
+   * 
+   * Search forwards from all out vertices
+   * Search backwards from all in vertices
+   * 
+   * If all pairs of reachable points from an in vertex and out vertex are less than 315, kill node
+   */
   @SuppressWarnings("unchecked")
   private static Graph secondPass(Graph graph) {
     boolean removed = true;
