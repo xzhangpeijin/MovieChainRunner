@@ -105,11 +105,28 @@ public class Graph
     PrintWriter out = new PrintWriter(new FileWriter(new File(filename)));
     
     out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    out.println("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\">");
+    out.print("<graphml");
+    out.print(" xmlns=\"http://graphml.graphdrawing.org/xmlns\"");
+    out.print(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+    out.print(" xmlns:y=\"http://www.yworks.com/xml/graphml\"");
+    out.print(" xmlns:yed=\"http://www.yworks.com/xml/yed/3\"");
+    out.print(" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns ");
+    out.println(" http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd\">");
+    out.println("\t<key for=\"node\" id=\"d1\" yfiles.type=\"nodegraphics\"/>");
     out.format("\t<graph id=\"%s\" edgedefault=\"directed\">%n", name);
     
     for (int x = 0; x < size; x++) {
-      out.format("\t\t<node id=\"%s\"/>%n", vertices.get(x));
+      out.format("\t\t<node id=\"%s\">%n", vertices.get(x));
+      out.println("\t\t\t<data key=\"d1\">");
+      out.println("\t\t\t\t<y:ShapeNode>");
+      out.format("\t\t\t\t\t<y:NodeLabel visible=\"true\" " +
+      		"autoSizePolicy=\"content\" fontFamily=\"Dialog\" " +
+      		"fontSize=\"12\" fontStyle=\"plain\" hasBackgroundColor=\"false\" " +
+      		"hasLineColor=\"false\" modelName=\"custom\" textColor=\"#000000\">" +
+      		"%s</y:NodeLabel>%n", x);
+      out.println("\t\t\t\t</y:ShapeNode>");
+      out.println("\t\t\t</data>");
+      out.println("\t\t</node>");
     }
     
     for (int x = 0; x < size; x++) {

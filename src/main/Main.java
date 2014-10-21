@@ -25,7 +25,6 @@ import main.utils.Graph;
  * -c                Create full graph from movie list
  * -s                Split full graph into components
  * -r [graph]        Run on given graph
- *                   Use -r A to run on all components with size > TARGET_LENGTH
  * -p [graph]        Print the edge list for a graph
  * 
  * @author Peijin Zhang
@@ -116,7 +115,7 @@ public class Main
 
   public static void main(String[] args) throws Exception {
     // Run without command line 
-    args = new String[]{"-p", "Component4"};
+    args = new String[]{"-p", "LargeComponent"};
 
     if (Arrays.binarySearch(args, "-h") >= 0) {
       System.out.println("Options:");
