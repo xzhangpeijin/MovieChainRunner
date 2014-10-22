@@ -41,7 +41,7 @@ public class GraphMaker {
 
     String nextline;
     while ((nextline = br.readLine()) != null) {
-      vertices.add(nextline);
+      vertices.add(nextline.trim());
     }
     br.close();
 

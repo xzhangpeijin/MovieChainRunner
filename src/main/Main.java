@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -15,6 +14,7 @@ import main.runners.GraphMaker;
 import main.runners.GraphSearcher;
 import main.runners.GraphSplitter;
 import main.utils.Graph;
+import main.utils.GraphUtils;
 import main.utils.ReduceGraph;
 
 /**
@@ -60,7 +60,7 @@ public class Main {
 
     Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph.getPath());
     for (Graph graph : graphs) {
-      if (graph.size() >= 10) {
+      if (graph.size() >= GraphUtils.CANDIDATE_CUTOFF) {
         graph.writeToFile("data" + SP + graph.getName() + ".txt");
       }
     }
@@ -128,9 +128,14 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     // Run without command line
-    args = new String[] { "-r", "ReducedGraph" };
+    args = new String[] {"-d", "LargeComponent"};
+    
+    ArrayList<String> arglist = new ArrayList<String>();
+    for (String arg : args) {
+      arglist.add(arg);
+    }
 
-    if (Arrays.binarySearch(args, "-h") >= 0) {
+    if (arglist.contains("-h")) {
       System.out.println("Options:");
       System.out.println("-h                Usage info");
       System.out.println("-c                Create full graph from movie list");
@@ -142,20 +147,20 @@ public class Main {
     }
 
     // Create full graph
-    if (Arrays.binarySearch(args, "-c") >= 0) {
+    if (arglist.contains("-c")) {
       Main.makeFullGraph();
     }
 
     // Split full graph into components
-    if (Arrays.binarySearch(args, "-s") >= 0) {
+    if (arglist.contains("-s")) {
       Main.splitComponents();
     }
 
     // Reduce a graph
     int dloc = -1;
-    if ((dloc = Arrays.binarySearch(args, "-d")) >= 0) {
+    if ((dloc = arglist.indexOf("-d")) >= 0) {
       try {
-        String component = args[dloc + 1];
+        String component = arglist.get(dloc + 1);
         Main.reduceGraph(component);
       } catch (IndexOutOfBoundsException e) {
         throw new IllegalArgumentException("Must specify graph to run with -d");
@@ -164,9 +169,9 @@ public class Main {
 
     // Search for longest path
     int rloc = -1;
-    if ((rloc = Arrays.binarySearch(args, "-r")) >= 0) {
+    if ((rloc = arglist.indexOf("-r")) >= 0) {
       try {
-        String component = args[rloc + 1];
+        String component = arglist.get(rloc + 1);
         Main.searchGraph(component);
       } catch (IndexOutOfBoundsException e) {
         throw new IllegalArgumentException("Must specify graph to run with -r");
@@ -175,9 +180,9 @@ public class Main {
 
     // Print edge list
     int ploc = -1;
-    if ((ploc = Arrays.binarySearch(args, "-p")) >= 0) {
+    if ((ploc = arglist.indexOf("-p")) >= 0) {
       try {
-        String component = args[ploc + 1];
+        String component = arglist.get(ploc + 1);
 
         URL componentDir = Main.class.getResource("/" + component + ".txt");
         if (componentDir == null) {
