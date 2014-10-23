@@ -46,7 +46,7 @@ If there are n vertices and the longest vertex is k words, the generation is O(k
 
 ####Graph format:
 
-Graphs are stored using in adjacency list and out adjacency lists. This allows for O(n) lookup for an edge existing in the worst cast but O(1) random access of edges.
+Graphs are stored using in adjacency list and out adjacency lists. This allows for O(n) lookup for an edge existing in the worst case but O(1) random access of edges.
 
 ####Component generation:
 
