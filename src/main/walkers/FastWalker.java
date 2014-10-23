@@ -46,6 +46,7 @@ public class FastWalker extends Walker {
 
   protected List<Candidate> getOutCandidates(int head, Set<Integer> visited) {
     List<Candidate> outCandidates = new ArrayList<Candidate>();
+    outCandidates.add(null);
     for (int edge : graph.getOutEdges(head)) {
       if (!visited.contains(edge)) {
         Set<Integer> reachable = new HashSet<Integer>(fReachable[edge]);
@@ -58,6 +59,7 @@ public class FastWalker extends Walker {
 
   protected List<Candidate> getInCandidates(int tail, Set<Integer> visited) {
     List<Candidate> inCandidates = new ArrayList<Candidate>();
+    inCandidates.add(null);
     for (int edge : graph.getInEdges(tail)) {
       if (!visited.contains(edge)) {
         Set<Integer> reachable = new HashSet<Integer>(bReachable[edge]);

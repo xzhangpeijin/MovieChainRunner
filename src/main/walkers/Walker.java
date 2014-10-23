@@ -62,20 +62,16 @@ public abstract class Walker implements Runnable {
     boolean movedForward = true;
     boolean movedBackward = true;
 
-    List<Candidate> outCandidates = new ArrayList<Candidate>();
-    List<Candidate> inCandidates = new ArrayList<Candidate>();
+    List<Candidate> outCandidates = null;
+    List<Candidate> inCandidates = null;
 
     while (movedForward || movedBackward) {
       if (movedForward) {
-        outCandidates.clear();
-        outCandidates.add(null);
-        outCandidates.addAll(getOutCandidates(head, visited));
+        outCandidates = getOutCandidates(head, visited);
       }
 
       if (movedBackward) {
-        inCandidates.clear();
-        inCandidates.add(null);
-        inCandidates.addAll(getInCandidates(tail, visited));
+        inCandidates = getInCandidates(tail, visited);
       }
 
       movedForward = false;

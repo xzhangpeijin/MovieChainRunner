@@ -128,7 +128,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     // Run without command line
-    args = new String[] {"-d", "LargeComponent"};
+    args = new String[] {"-r", "ReducedGraph"};
     
     ArrayList<String> arglist = new ArrayList<String>();
     for (String arg : args) {
