@@ -5,7 +5,16 @@ CMU 15221 Project
 
 ##Project Specifications
 
-####Usage Info:
+####Usage Info
+
+######Running
+```
+git clone https://github.com/xzhangpeijin/MovieChainRunner.git
+cd MovieChainRunner
+java -jar MovieChainRunner.jar <arguments>
+```
+
+######Arguments
 
 ```
  * -h                Print usage info
@@ -16,6 +25,8 @@ CMU 15221 Project
  * -p [graph]        Print a given graph to graphml format
 ```
 
+####Data
+
 All files are under /data
 
 * MovieList - Input of all movie titles
@@ -24,7 +35,7 @@ All files are under /data
 
 Results will be outputted under /results/[Graph]Results.txt
 
-####Graph file format:
+####Graph file format
 
 First line is the name of the graph
 
