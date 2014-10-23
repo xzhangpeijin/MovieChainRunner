@@ -49,18 +49,18 @@ If an integer x is on the ith line, then there exists an edge from i to x in the
 
 ####Code structure
 
-`Main.java` Main class: Handles 
+`Main.java` Handles running of programs and parsing command line arguments
 
 `runners` Classes for handling main program functions
-  `GraphMaker` Creates a graph given a list of movie titles
-  `GraphSearcher` Launches a graph search by using one of the walkers/search algorithms 
-  `GraphSplitter` Splits a graph into connected components
+*  `GraphMaker` Creates a graph given a list of movie titles
+*  `GraphSearcher` Launches a graph search by using one of the walkers/search algorithms 
+*  `GraphSplitter` Splits a graph into connected components
 
 `utils` General utility classes
-  `Graph.java` Class for representing a graph
-  `Path.java`Class for representing a path
+*  `Graph.java` Class for representing a graph
+*  `Path.java`Class for representing a path
 
 `walkers` Classes for doing actual graph walking and finding longest paths
-  `FastWalker.java` Walks using a pre-generated reachability map which may not be accurate but is fast
-  `SlowWalker.java` Recomputes reachability maps at each walk step
-  `DeterministicWalker.java` Deterministically finds longest paths by picking nodes with largest reachability set
+*  `FastWalker.java` Walks using a pre-generated reachability map which may not be accurate but is fast
+*  `SlowWalker.java` Recomputes reachability maps at each walk step
+*  `DeterministicWalker.java` Deterministically finds longest paths by picking nodes with largest reachability set
