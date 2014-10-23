@@ -3,6 +3,10 @@ MovieChainRunner
 
 CMU 15221 Project
 
+Addresses the MovieChainRunner aka SlingBladeRunner problem
+
+Additional information can be found on the project wiki
+
 ##Project Specifications
 
 ####Usage Info
@@ -31,7 +35,7 @@ All files are under /data
 
 * MovieList - Input of all movie titles
 * FullGraph - Initial graph 
-* Additional graphs - Graphs after processing
+* Additional files - Graphs after processing
 
 Results will be outputted under /results/[Graph]Results.txt
 
