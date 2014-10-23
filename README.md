@@ -52,9 +52,9 @@ If an integer x is on the ith line, then there exists an edge from i to x in the
 `Main.java` Handles running of programs and parsing command line arguments
 
 `runners` Classes for handling main program functions
-*  `GraphMaker` Creates a graph given a list of movie titles
-*  `GraphSearcher` Launches a graph search by using one of the walkers/search algorithms 
-*  `GraphSplitter` Splits a graph into connected components
+*  `GraphMaker.java` Creates a graph given a list of movie titles
+*  `GraphSearcher.java` Launches a graph search by using one of the walkers/search algorithms 
+*  `GraphSplitter.java` Splits a graph into connected components
 
 `utils` General utility classes
 *  `Graph.java` Class for representing a graph
