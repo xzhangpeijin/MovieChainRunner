@@ -33,7 +33,11 @@ All files are under /data
 * FullGraph - Initial graph 
 * Additional files - Graphs after processing
 
-Results will be outputted under /results/[Graph]Results.txt
+####Results
+
+All files are under /results
+
+Hidden for now
 
 ####Graph file format
 
