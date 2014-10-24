@@ -51,6 +51,7 @@ public class GraphMaker {
   private static boolean hasOverlap(String a, String b) {
     String[] atoks = a.split(" ");
     String[] btoks = b.split(" ");
+    // Standard overlap search
     for (int x = 0; x < Math.min(atoks.length, btoks.length); x++) {
       boolean overlap = true;
       int start = atoks.length - 1 - x;
