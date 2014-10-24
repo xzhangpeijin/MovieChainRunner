@@ -1,10 +1,6 @@
 MovieChainRunner
 ================
 
-CMU 15221 Project
-
-Addresses the MovieChainRunner aka SlingBladeRunner problem
-
 Additional information can be found on the project wiki
 
 ##Project Specifications
