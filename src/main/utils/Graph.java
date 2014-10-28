@@ -100,6 +100,20 @@ public class Graph {
   public List<Integer> getOutEdges(int vertex) {
     return new LinkedList<Integer>(outedges[vertex]);
   }
+  
+  public boolean containsEdge(String from, String to) {
+    return containsEdge(vertices.indexOf(from), vertices.indexOf(to));
+  }
+  
+  public boolean containsEdge(int from, int to) {
+    return outedges[from].contains(to);
+  }
+  
+  /*
+   * GraphML writing format:
+   * 
+   * GraphML is a graph format based on XML that's used for YED to display graphs
+   */
 
   /**
    * Writes graph to graphml format

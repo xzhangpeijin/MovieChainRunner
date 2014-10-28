@@ -1,10 +1,6 @@
 MovieChainRunner
 ================
 
-CMU 15221 Project
-
-Addresses the MovieChainRunner aka SlingBladeRunner problem
-
 Additional information can be found on the project wiki
 
 ##Project Specifications
@@ -37,7 +33,11 @@ All files are under /data
 * FullGraph - Initial graph 
 * Additional files - Graphs after processing
 
-Results will be outputted under /results/[Graph]Results.txt
+####Results
+
+All files are under /results
+
+Hidden for now
 
 ####Graph file format
 
