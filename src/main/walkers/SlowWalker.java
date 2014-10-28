@@ -18,7 +18,7 @@ import main.utils.GraphUtils;
  * 
  * @author Peijin Zhang
  */
-public class SlowWalker extends Walker {
+public class SlowWalker extends TwoWayWalker {
   
   private final Random random;
   private List<CandidatePair> pairs;

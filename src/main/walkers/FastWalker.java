@@ -19,7 +19,7 @@ import main.utils.Graph;
  * 
  * @author Peijin Zhang
  */
-public class FastWalker extends Walker {
+public class FastWalker extends TwoWayWalker {
   private final Set<Integer>[] fReachable;
   private final Set<Integer>[] bReachable;
   
