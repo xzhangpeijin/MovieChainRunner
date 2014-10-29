@@ -17,7 +17,7 @@ public class ReduceGraph {
 
   public static Graph reduceGraph(Graph graph) {
     String newname = "Reduced" + graph.getName();
-    graph = firstPass(graph);
+    graph = thirdPass(graph);
     graph.setName(newname);
 
     return graph;
@@ -29,6 +29,7 @@ public class ReduceGraph {
    * Searches forwards and backwards from each node If < 315 points are reached
    * this way, kill node
    */
+  @SuppressWarnings("unused")
   private static Graph firstPass(Graph graph) {
 
     boolean removed = true;
@@ -124,6 +125,19 @@ public class ReduceGraph {
       }
     }
 
+    return graph;
+  }
+  
+  /**
+   * "Reduces" a graph by taking the intersection of all of its reachability sets
+   * 
+   * The resulting graph is a strongly connected component where we can simply search
+   * for longest paths in. From there, we can extend this "reduced" graph into the
+   * real reduced graph by just extending the ends into the reduced set until we can't
+   * move anymore.
+   */
+  @SuppressWarnings("unused")
+  private static Graph thirdPass(Graph graph) {
     return graph;
   }
 }
