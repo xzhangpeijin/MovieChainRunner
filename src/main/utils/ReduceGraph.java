@@ -1,5 +1,6 @@
 package main.utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -136,8 +137,26 @@ public class ReduceGraph {
    * real reduced graph by just extending the ends into the reduced set until we can't
    * move anymore.
    */
-  @SuppressWarnings("unused")
   private static Graph thirdPass(Graph graph) {
-    return graph;
+    List<String> vertices = graph.getVertices();
+    
+    Set<Integer> intersect = new HashSet<Integer>();
+    for (int x = 0; x < vertices.size(); x++) {
+      intersect.add(x);
+    }
+    
+    for (int x = 0; x < vertices.size(); x++) {
+      Set<Integer> reachable = GraphUtils.searchForward(graph, x);
+      reachable.addAll(GraphUtils.searchBackward(graph, x));
+      
+      intersect.retainAll(reachable);
+    }
+    
+    List<String> newvertices = new ArrayList<String>(intersect.size());
+    for (int vertex : intersect) {
+      newvertices.add(vertices.get(vertex));
+    }
+    
+    return GraphMaker.makeGraph(newvertices, TEMP_NAME);
   }
 }
