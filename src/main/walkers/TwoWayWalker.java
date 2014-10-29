@@ -1,6 +1,7 @@
 package main.walkers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -126,10 +127,19 @@ public abstract class TwoWayWalker extends Walker {
   protected static class CandidatePair {
     public final Candidate forward;
     public final Candidate backward;
+    public final Set<Integer> reachable;
 
     public CandidatePair(Candidate forward, Candidate backward) {
       this.forward = forward;
       this.backward = backward;
+      
+      reachable = new HashSet<Integer>();
+      if (forward != null) {
+        reachable.addAll(forward.reachable);
+      } 
+      if (backward != null) {
+        reachable.addAll(backward.reachable);
+      }
     }
   }
 }

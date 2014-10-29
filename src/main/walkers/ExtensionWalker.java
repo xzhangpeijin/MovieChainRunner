@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 import main.utils.Graph;
-import main.utils.GraphUtils;
 import main.utils.Path;
 
 /**
@@ -19,17 +18,19 @@ import main.utils.Path;
  * 
  * @author Peijin Zhang
  */
-public class SlowWalker extends TwoWayWalker {
+public class ExtensionWalker extends TwoWayWalker {
 
+  private final Graph superGraph;
   private final Random random;
   private List<CandidatePair> pairs;
 
-  public SlowWalker(Graph graph, List<Integer> initstates, String filename,
+  public ExtensionWalker(Graph graph, Graph superGraph, List<Integer> initstates, String filename,
       AtomicInteger maxLength, Lock fileLock) {
     super(graph, initstates, filename, maxLength, fileLock);
 
     this.random = new Random(System.nanoTime());
     this.pairs = new ArrayList<CandidatePair>();
+    this.superGraph = superGraph;
   }
 
   protected int chooseStart() {
@@ -41,8 +42,7 @@ public class SlowWalker extends TwoWayWalker {
     outCandidates.add(null);
     for (int edge : graph.getOutEdges(head)) {
       if (!path.contains(edge)) {
-        Set<Integer> reachable = GraphUtils.searchForward(graph, edge, path.getVisited());
-        outCandidates.add(new Candidate(edge, reachable));
+        outCandidates.add(new Candidate(edge, null));
       }
     }
     return outCandidates;
@@ -53,8 +53,7 @@ public class SlowWalker extends TwoWayWalker {
     inCandidates.add(null);
     for (int edge : graph.getInEdges(tail)) {
       if (!path.contains(edge)) {
-        Set<Integer> reachable = GraphUtils.searchBackward(graph, edge, path.getVisited());
-        inCandidates.add(new Candidate(edge, reachable));
+        inCandidates.add(new Candidate(edge, null));
       }
     }
     return inCandidates;
@@ -97,5 +96,9 @@ public class SlowWalker extends TwoWayWalker {
     } else {
       return null;
     }
+  }
+  
+  protected void walkPath(Path path) {
+    super.walkPath(path);
   }
 }
