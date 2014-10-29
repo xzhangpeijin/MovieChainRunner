@@ -24,17 +24,15 @@ public abstract class Walker implements Runnable {
   protected boolean doneWalking;
 
   protected final Graph graph;
-  protected final List<Integer> initstates;
 
   protected final AtomicInteger maxLength;
   
   private final String filename;
   private final Lock fileLock;
 
-  public Walker(Graph graph, List<Integer> initstates, String filename,
+  public Walker(Graph graph, String filename,
       AtomicInteger maxLength, Lock fileLock) {
     this.graph = graph;
-    this.initstates = initstates;
 
     this.maxLength = maxLength;
     this.filename = filename;

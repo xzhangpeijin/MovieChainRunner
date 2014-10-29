@@ -61,6 +61,8 @@ public class SlowWalker extends TwoWayWalker {
 
   protected CandidatePair getNext(List<Candidate> outCandidates, List<Candidate> inCandidates) {
     pairs.clear();
+
+    int maxsize = -1;
     for (int x = 0; x < outCandidates.size(); x++) {
       for (int y = 0; y < inCandidates.size(); y++) {
         Set<Integer> reachable = new HashSet<Integer>();
@@ -73,7 +75,12 @@ public class SlowWalker extends TwoWayWalker {
           reachable.addAll(inCandidates.get(y).reachable);
         }
         
-        if (reachable.size() >= maxLength.get()) {
+        if (reachable.size() > maxsize) {
+          pairs.clear();
+          maxsize = reachable.size();
+        }
+        
+        if (reachable.size() == maxsize) {
           pairs.add(new CandidatePair(outCandidates.get(x), inCandidates.get(y)));
         }
       }

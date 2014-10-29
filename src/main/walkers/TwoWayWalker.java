@@ -25,9 +25,13 @@ import main.utils.Graph;
  */
 public abstract class TwoWayWalker extends Walker {
 
+  protected List<Integer> initstates;
+  
   public TwoWayWalker(Graph graph, List<Integer> initstates, String filename,
       AtomicInteger maxLength, Lock fileLock) {
-    super(graph, initstates, filename, maxLength, fileLock);
+    super(graph, filename, maxLength, fileLock);
+    
+    this.initstates = initstates;
   }
 
   /**
@@ -78,6 +82,8 @@ public abstract class TwoWayWalker extends Walker {
         }
       }
     }
+    
+    //System.out.println(path.size());
   }
   
   protected abstract int chooseStart();

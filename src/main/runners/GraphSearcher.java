@@ -27,7 +27,7 @@ import main.walkers.TwoWayWalker;
  */
 @SuppressWarnings("unused")
 public class GraphSearcher {
-  private static final int INITIAL_CUTOFF = 266;
+  private static final int INITIAL_CUTOFF = 270;
 
   private final String filename;
   private final Graph graph;
@@ -61,7 +61,7 @@ public class GraphSearcher {
         initStates.add(x);
       }
     }
-    
+
     // Uncomment if using FastWalker
 //    Set<Integer>[] fReachable = new Set[graph.size()];
 //    Set<Integer>[] bReachable = new Set[graph.size()];
@@ -80,9 +80,11 @@ public class GraphSearcher {
       TwoWayWalker walker;
       
       walker = new SlowWalker(graph, initStates, filename, maxLength, fileLock);
-          
-//      walker = new FastWalker(graph, initStates, fReachable, bReachable,
-//          filename, maxLength, fileLock);
+      
+//    walker = new DeterministicWalker(graph, initStates, filename, maxLength, fileLock);    
+
+//    walker = new FastWalker(graph, initStates, fReachable, bReachable,
+//    filename, maxLength, fileLock);
       
       Thread search = new Thread(walker);
       search.start();

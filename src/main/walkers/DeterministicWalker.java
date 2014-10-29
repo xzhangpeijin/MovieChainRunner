@@ -1,6 +1,8 @@
 package main.walkers;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
@@ -33,22 +35,27 @@ public class DeterministicWalker extends SlowWalker {
   }
   
   protected CandidatePair getNext(List<Candidate> outCandidates, List<Candidate> inCandidates) {
-    
-    Candidate out = null;
+    CandidatePair move = null;
+    int size = -1;
     for (int x = 0; x < outCandidates.size(); x++) {
-      if (out == null || outCandidates.get(x).reachable.size() > out.reachable.size()) {
-        out = outCandidates.get(x);
+      for (int y = 0; y < inCandidates.size(); y++) {
+        Set<Integer> reachable = new HashSet<Integer>();
+        
+        if (x != 0) {
+          reachable.addAll(outCandidates.get(x).reachable);
+        }
+        
+        if (y != 0) {
+          reachable.addAll(inCandidates.get(y).reachable);
+        }
+        
+        if (reachable.size() >= size) {
+          size = reachable.size();
+          move = new CandidatePair(outCandidates.get(x), inCandidates.get(y));
+        }
       }
     }
-    
-    Candidate in = null;
-    for (int x = 0; x < inCandidates.size(); x++) {
-      if (in == null || inCandidates.get(x).reachable.size() > in.reachable.size()) {
-        in = inCandidates.get(x);
-      }
-    }
-    
-    return new CandidatePair(out, in);
+    return move;
   }
   
 }
