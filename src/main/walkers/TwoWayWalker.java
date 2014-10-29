@@ -1,5 +1,6 @@
 package main.walkers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,7 +100,7 @@ public abstract class TwoWayWalker extends Walker {
   }
   
   private void filterCandidates(List<Candidate> candidates, Set<Integer> visited) {
-    Set<Candidate> newCandidates = new HashSet<Candidate>(candidates.size());
+    List<Candidate> newCandidates = new ArrayList<Candidate>(candidates.size());
     for (Candidate candidate : candidates) {
       if (candidate == null || !visited.contains(candidate.node)) {
         newCandidates.add(candidate);
