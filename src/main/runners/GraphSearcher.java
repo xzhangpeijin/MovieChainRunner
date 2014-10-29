@@ -14,7 +14,7 @@ import main.utils.GraphUtils;
 import main.walkers.DeterministicWalker;
 import main.walkers.FastWalker;
 import main.walkers.SlowWalker;
-import main.walkers.TwoWayWalker;
+import main.walkers.Walker;
 
 /**
  * Searches for the longest path in a given graph
@@ -27,7 +27,7 @@ import main.walkers.TwoWayWalker;
  */
 @SuppressWarnings("unused")
 public class GraphSearcher {
-  private static final int INITIAL_CUTOFF = 270;
+  private static final int INITIAL_CUTOFF = 250;
 
   private final String filename;
   private final Graph graph;
@@ -77,11 +77,11 @@ public class GraphSearcher {
     System.out.println("Started Searching");
     for (int x = 0; x < threads; x++) {
       // Edit here to change walker type
-      TwoWayWalker walker;
+      Walker walker;
       
       walker = new SlowWalker(graph, initStates, filename, maxLength, fileLock);
       
-//    walker = new DeterministicWalker(graph, initStates, filename, maxLength, fileLock);    
+//      walker = new DeterministicWalker(graph, initStates, filename, maxLength, fileLock);    
 
 //    walker = new FastWalker(graph, initStates, fReachable, bReachable,
 //    filename, maxLength, fileLock);

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
@@ -65,11 +64,13 @@ public abstract class Walker implements Runnable {
         out.println("Path Length: " + path.size());
 
         StringBuffer buf = new StringBuffer();
-        for (int vertex : path) {
-          buf.append(vertex);
-          buf.append(" ");
+        for (int x = 0; x < path.size(); x++) {
+          if (x != 0) {
+            buf.append(" ");
+          }
+          buf.append(path.get(x));
         }
-        out.println(buf.toString().trim());
+        out.println(buf.toString());
 
         out.flush();
         out.close();
@@ -103,16 +104,6 @@ public abstract class Walker implements Runnable {
       }
 
       path.clear();
-    }
-  }
-
-  protected static class Candidate {
-    public final int node;
-    public final Set<Integer> reachable;
-
-    public Candidate(int node, Set<Integer> reachable) {
-      this.node = node;
-      this.reachable = reachable;
     }
   }
 }
