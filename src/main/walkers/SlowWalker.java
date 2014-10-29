@@ -10,6 +10,7 @@ import java.util.concurrent.locks.Lock;
 
 import main.utils.Graph;
 import main.utils.GraphUtils;
+import main.utils.Path;
 
 /**
  * Intelligent Random Walker with improved path lengths but decreased speed
@@ -35,24 +36,24 @@ public class SlowWalker extends TwoWayWalker {
     return initstates.get(random.nextInt(initstates.size()));
   }
 
-  protected List<Candidate> getOutCandidates(int head, Set<Integer> visited) {
+  protected List<Candidate> getOutCandidates(int head, Path path) {
     List<Candidate> outCandidates = new ArrayList<Candidate>();
     outCandidates.add(null);
     for (int edge : graph.getOutEdges(head)) {
-      if (!visited.contains(edge)) {
-        Set<Integer> reachable = GraphUtils.searchForward(graph, edge, visited);
+      if (!path.contains(edge)) {
+        Set<Integer> reachable = GraphUtils.searchForward(graph, edge, path.getVisited());
         outCandidates.add(new Candidate(edge, reachable));
       }
     }
     return outCandidates;
   }
 
-  protected List<Candidate> getInCandidates(int tail, Set<Integer> visited) {
+  protected List<Candidate> getInCandidates(int tail, Path path) {
     List<Candidate> inCandidates = new ArrayList<Candidate>();
     inCandidates.add(null);
     for (int edge : graph.getInEdges(tail)) {
-      if (!visited.contains(edge)) {
-        Set<Integer> reachable = GraphUtils.searchBackward(graph, edge, visited);
+      if (!path.contains(edge)) {
+        Set<Integer> reachable = GraphUtils.searchBackward(graph, edge, path.getVisited());
         inCandidates.add(new Candidate(edge, reachable));
       }
     }

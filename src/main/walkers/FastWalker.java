@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 import main.utils.Graph;
+import main.utils.Path;
 
 /**
  * Random walker for trying to find the longest path
@@ -44,26 +45,26 @@ public class FastWalker extends TwoWayWalker {
     return initstates.get(random.nextInt(initstates.size()));
   }
 
-  protected List<Candidate> getOutCandidates(int head, Set<Integer> visited) {
+  protected List<Candidate> getOutCandidates(int head, Path path) {
     List<Candidate> outCandidates = new ArrayList<Candidate>();
     outCandidates.add(null);
     for (int edge : graph.getOutEdges(head)) {
-      if (!visited.contains(edge)) {
+      if (!path.contains(edge)) {
         Set<Integer> reachable = new HashSet<Integer>(fReachable[edge]);
-        reachable.addAll(visited);
+        reachable.addAll(path.getVisited());
         outCandidates.add(new Candidate(edge, reachable));
       }
     }
     return outCandidates;
   }
 
-  protected List<Candidate> getInCandidates(int tail, Set<Integer> visited) {
+  protected List<Candidate> getInCandidates(int tail, Path path) {
     List<Candidate> inCandidates = new ArrayList<Candidate>();
     inCandidates.add(null);
     for (int edge : graph.getInEdges(tail)) {
-      if (!visited.contains(edge)) {
+      if (!path.contains(edge)) {
         Set<Integer> reachable = new HashSet<Integer>(bReachable[edge]);
-        reachable.addAll(visited);
+        reachable.addAll(path.getVisited());
         inCandidates.add(new Candidate(edge, reachable));
       }
     }

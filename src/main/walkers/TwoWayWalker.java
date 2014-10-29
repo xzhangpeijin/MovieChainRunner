@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 
 import main.utils.Graph;
+import main.utils.Path;
 
 /**
  * Two way walker
@@ -38,12 +39,12 @@ public abstract class TwoWayWalker extends Walker {
   /**
    * Walks one random walk
    */
-  protected void walkPath(List<Integer> path) {
+  protected void walkPath(Path path) {
     int start = chooseStart();
 
     Set<Integer> visited = new HashSet<Integer>();
     visited.add(start);
-    path.add(start);
+    path.appendForward(start);
 
     int head = start;
     int tail = start;
@@ -56,14 +57,14 @@ public abstract class TwoWayWalker extends Walker {
 
     while (movedForward || movedBackward) {
       if (movedForward) {
-        outCandidates = getOutCandidates(head, visited);
+        outCandidates = getOutCandidates(head, path);
       } else {
-        filterCandidates(outCandidates, visited);
+        filterCandidates(outCandidates, path);
       }
       if (movedBackward) {
-        inCandidates = getInCandidates(tail, visited);
+        inCandidates = getInCandidates(tail, path);
       } else {
-        filterCandidates(inCandidates, visited);
+        filterCandidates(inCandidates, path);
       }
 
       movedForward = false;
@@ -75,34 +76,24 @@ public abstract class TwoWayWalker extends Walker {
         if (next.forward != null) {
           movedForward = true;
           head = next.forward.node;
-          if (visited.contains(head)) {
-            System.out.println("H:" + movedForward + " " + head + " " + movedBackward + " " + tail);
-          }
-          path.add(head);
+          path.appendForward(head);
           visited.add(head);
         }
 
         if (next.backward != null) {
           movedBackward = true;
           tail = next.backward.node;
-          if (visited.contains(tail)) {
-            System.out.println("H:" + movedForward + " " + head + " " + movedBackward + " " + tail);
-          }
-          path.add(0, tail);
+          path.appendBackward(tail);
           visited.add(tail);
         }
       }
     }
-
-    if (visited.size() != path.size()) {
-      System.out.println("ERR: " + visited.size() + " " + path.size());
-    }
   }
   
-  private void filterCandidates(List<Candidate> candidates, Set<Integer> visited) {
+  private void filterCandidates(List<Candidate> candidates, Path path) {
     List<Candidate> newCandidates = new ArrayList<Candidate>(candidates.size());
     for (Candidate candidate : candidates) {
-      if (candidate == null || !visited.contains(candidate.node)) {
+      if (candidate == null || !path.contains(candidate.node)) {
         newCandidates.add(candidate);
       }
     }
@@ -112,9 +103,17 @@ public abstract class TwoWayWalker extends Walker {
 
   protected abstract int chooseStart();
 
-  protected abstract List<Candidate> getOutCandidates(int head, Set<Integer> visited);
+  /**
+   * Gets possible outCandidates
+   * Requires first index to be null
+   */
+  protected abstract List<Candidate> getOutCandidates(int head, Path path);
 
-  protected abstract List<Candidate> getInCandidates(int tail, Set<Integer> visited);
+  /**
+   * Gets possible inCandidates
+   * Requires first index to be null
+   */
+  protected abstract List<Candidate> getInCandidates(int tail, Path path);
 
   protected abstract CandidatePair getNext(
       List<Candidate> outCandidates, List<Candidate> inCandidates);
