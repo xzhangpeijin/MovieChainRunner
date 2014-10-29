@@ -27,7 +27,7 @@ import main.walkers.Walker;
  */
 @SuppressWarnings("unused")
 public class GraphSearcher {
-  private static final int INITIAL_CUTOFF = 280;
+  private static final int INITIAL_CUTOFF = 250;
 
   private final String filename;
   private final Graph graph;

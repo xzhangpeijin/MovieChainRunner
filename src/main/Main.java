@@ -128,7 +128,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     // Run without command line
-    args = new String[] {"-p", "CompleteComponent"};
+    args = new String[] {"-r", "CompleteComponent"};
     
     ArrayList<String> arglist = new ArrayList<String>();
     for (String arg : args) {

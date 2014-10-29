@@ -77,13 +77,13 @@ public class SlowWalker extends TwoWayWalker {
           if (y != 0) {
             reachable.addAll(inCandidates.get(y).reachable);
           }
-
+          
           if (reachable.size() > maxsize) {
             pairs.clear();
             maxsize = reachable.size();
           }
 
-          if (reachable.size() == maxsize && outCandidates.get(x) != inCandidates.get(y)) {
+          if (reachable.size() == maxsize) {
             pairs.add(new CandidatePair(outCandidates.get(x), inCandidates.get(y)));
           }
         }
