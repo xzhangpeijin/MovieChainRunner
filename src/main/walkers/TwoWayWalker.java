@@ -35,17 +35,17 @@ public abstract class TwoWayWalker extends Walker {
 
     this.initstates = initstates;
   }
-
+  
   /**
-   * Walks one random walk
+   * Walks one random walk onto the given path
    */
-  protected void walkPath(Path path) {
+  protected Path walkPath() {
+    Path path = new Path(graph);
     int start = chooseStart();
-
     path.appendForward(start);
-
-    int head = start;
-    int tail = start;
+    
+    int head = path.getHead();
+    int tail = path.getTail();
 
     boolean movedForward = true;
     boolean movedBackward = true;
@@ -84,6 +84,8 @@ public abstract class TwoWayWalker extends Walker {
         }
       }
     }
+    
+    return path;
   }
   
   private void filterCandidates(List<Candidate> candidates, Path path) {

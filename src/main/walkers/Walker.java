@@ -36,7 +36,7 @@ public abstract class Walker implements Runnable {
     doneWalking = false;
   }
 
-  protected abstract void walkPath(Path path);
+  protected abstract Path walkPath();
 
   /**
    * Writes path to file
@@ -60,10 +60,9 @@ public abstract class Walker implements Runnable {
 
   @Override
   public void run() {
-    Path path = new Path(graph);
     long paths = 0;
     while (!doneWalking) {
-      walkPath(path);
+      Path path = walkPath();
       paths++;
 
       // Check with atomic integer so no context switch required
@@ -75,8 +74,6 @@ public abstract class Walker implements Runnable {
       if (paths % 10000 == 0) {
         System.out.println("Paths walked: " + paths);
       }
-
-      path.clear();
     }
   }
 }

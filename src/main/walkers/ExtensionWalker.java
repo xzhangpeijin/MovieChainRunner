@@ -10,6 +10,7 @@ import java.util.concurrent.locks.Lock;
 
 import main.utils.Graph;
 import main.utils.Path;
+import main.utils.PathUtils;
 
 /**
  * Intelligent Random Walker with improved path lengths but decreased speed
@@ -24,8 +25,8 @@ public class ExtensionWalker extends TwoWayWalker {
   private final Random random;
   private List<CandidatePair> pairs;
 
-  public ExtensionWalker(Graph graph, Graph superGraph, List<Integer> initstates, String filename,
-      AtomicInteger maxLength, Lock fileLock) {
+  public ExtensionWalker(Graph graph, Graph superGraph, List<Integer> initstates, 
+      String filename, AtomicInteger maxLength, Lock fileLock) {
     super(graph, initstates, filename, maxLength, fileLock);
 
     this.random = new Random(System.nanoTime());
@@ -98,7 +99,9 @@ public class ExtensionWalker extends TwoWayWalker {
     }
   }
   
-  protected void walkPath(Path path) {
-    super.walkPath(path);
+  protected Path walkPath() {
+    Path path = super.walkPath();
+    PathUtils.convertPath(superGraph, path);
+    return path;
   }
 }

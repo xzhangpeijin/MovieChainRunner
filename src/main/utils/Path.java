@@ -48,6 +48,14 @@ public class Path {
     path.add(0, vertex);
   }
   
+  public int getHead() {
+    return path.get(path.size() - 1);
+  }
+  
+  public int getTail() {
+    return path.get(0);
+  }
+  
   public int size() {
     return path.size();
   }
