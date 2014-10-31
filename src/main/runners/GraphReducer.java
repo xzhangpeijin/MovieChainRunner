@@ -1,11 +1,12 @@
-package main.utils;
+package main.runners;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import main.runners.GraphMaker;
+import main.utils.Graph;
+import main.utils.GraphUtils;
 
 /**
  * Tries to reduce a graph by removing nodes that can't be part of the longest
@@ -13,7 +14,7 @@ import main.runners.GraphMaker;
  * 
  * @author Peijin Zhang
  */
-public class ReduceGraph {
+public class GraphReducer {
   private static final String TEMP_NAME = "TEMP_GRAPH_NAME";
 
   public static Graph reduceGraph(Graph graph) {

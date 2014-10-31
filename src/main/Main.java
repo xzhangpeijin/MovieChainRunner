@@ -11,11 +11,11 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import main.runners.GraphMaker;
+import main.runners.GraphReducer;
 import main.runners.GraphSearcher;
 import main.runners.GraphSplitter;
 import main.utils.Graph;
 import main.utils.GraphUtils;
-import main.utils.ReduceGraph;
 
 /**
  * Main class for running MovieChainRunner functions
@@ -109,7 +109,7 @@ public class Main {
     String outputPath = "data" + SP + component + "Reduced.txt";
 
     Graph input = Graph.readFromFile(componentDir.getPath());
-    Graph reduced = ReduceGraph.reduceGraph(input);
+    Graph reduced = GraphReducer.reduceGraph(input);
     reduced.writeToFile(outputPath);
   }
 

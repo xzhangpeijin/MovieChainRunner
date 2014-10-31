@@ -104,21 +104,21 @@ public class Path {
    * 
    * Expects path file to contain paths in strictly increasing length
    */
-  public static Path readFromFile(Graph graph, String filename) throws IOException {
+  public static List<Path> readFromFile(Graph graph, String filename) throws IOException {
     BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
     
-    Path path = new Path(graph);
+    List<Path> results = new ArrayList<Path>();
     
-    String pathvertices = null;
     while (br.readLine() != null) {
-      pathvertices = br.readLine();
-    }
-    
-    for (String vertex : pathvertices.split(" ")) {
-      path.appendForward(Integer.parseInt(vertex));
+      Path path = new Path(graph);
+      String[] vertices = br.readLine().split(" ");
+      for (String vertex : vertices) {
+        path.appendForward(Integer.parseInt(vertex));
+      }
+      results.add(path);
     }
     
     br.close();
-    return path;
+    return results;
   }
 }
