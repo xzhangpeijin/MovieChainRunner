@@ -23,7 +23,7 @@ public class SlowWalker extends TwoWayWalker {
   // If set to true, we search all possible solutions. If set to false, we only find
   // the local optimum at each point. Doing local optimums gives us generally longer paths
   // but does not guarantee us to be able to find the longest
-  public static final boolean EXHAUSTIVE = true;
+  public static final boolean EXHAUSTIVE = false;
 
   private final Random random;
   private List<CandidatePair> pairs;
