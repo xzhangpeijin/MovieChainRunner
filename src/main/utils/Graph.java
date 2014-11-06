@@ -180,7 +180,9 @@ public class Graph {
    * Writes graph to file
    */
   public void writeToFile(String filename) throws IOException {
-    PrintWriter out = new PrintWriter(new FileWriter(new File(filename)));
+    File file = new File(filename);
+    file.mkdirs();
+    PrintWriter out = new PrintWriter(new FileWriter(file));
 
     out.println(name);
     out.println(size);
