@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -203,8 +206,8 @@ public class Graph {
   /**
    * Reads graph from file
    */
-  public static Graph readFromFile(String filename) throws IOException {
-    BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
+  public static Graph readGraph(InputStream stream) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 
     String name = br.readLine();
     int size = Integer.parseInt(br.readLine());
@@ -229,5 +232,9 @@ public class Graph {
     br.close();
 
     return graph;
+  }
+  
+  public static Graph readGraph(URL url) throws IOException {
+    return readGraph(url.openStream());
   }
 }

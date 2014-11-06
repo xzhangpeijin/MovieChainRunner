@@ -1,6 +1,7 @@
 package main.runners;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -59,7 +60,7 @@ public class GraphSplitter {
     return graphs;
   }
 
-  public static Set<Graph> splitGraph(String path) throws IOException {
-    return splitGraph(Graph.readFromFile(path));
+  public static Set<Graph> splitGraph(URL url) throws IOException {
+    return splitGraph(Graph.readGraph(url));
   }
 }

@@ -20,6 +20,10 @@ import main.utils.Path;
  * @author Peijin Zhang
  */
 public class SlowWalker extends TwoWayWalker {
+  // If set to true, we search all possible solutions. If set to false, we only find
+  // the local optimum at each point. Doing local optimums gives us generally longer paths
+  // but does not guarantee us to be able to find the longest
+  public static final boolean EXHAUSTIVE = true;
 
   private final Random random;
   private List<CandidatePair> pairs;
@@ -85,7 +89,8 @@ public class SlowWalker extends TwoWayWalker {
     }
 
     for (int x = 0; x < pairs.size(); x++) {
-      if (pairs.get(x).reachable.size() < maxsize) {
+      int cutoff = (EXHAUSTIVE) ? GraphUtils.CANDIDATE_CUTOFF : maxsize;
+      if (pairs.get(x).reachable.size() < cutoff) {
         pairs.remove(x);
         x--;
       }

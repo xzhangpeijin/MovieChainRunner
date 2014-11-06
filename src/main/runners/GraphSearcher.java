@@ -2,6 +2,7 @@ package main.runners;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import main.walkers.Walker;
  */
 @SuppressWarnings("unused")
 public class GraphSearcher {
+  // Start search at 250
   private static final int INITIAL_CUTOFF = 250;
 
   private final String filename;
@@ -43,13 +45,13 @@ public class GraphSearcher {
     this(graph, output, Runtime.getRuntime().availableProcessors());
   }
 
-  public GraphSearcher(String path, String output, int threads)
+  public GraphSearcher(URL url, String output, int threads)
       throws IOException {
-    this(Graph.readFromFile(path), output, threads);
+    this(Graph.readGraph(url), output, threads);
   }
 
-  public GraphSearcher(String path, String output) throws IOException {
-    this(Graph.readFromFile(path), output);
+  public GraphSearcher(URL url, String output) throws IOException {
+    this(Graph.readGraph(url), output);
   }
 
   public void searchGraph() {

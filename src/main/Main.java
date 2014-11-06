@@ -58,7 +58,7 @@ public class Main {
       throw new RuntimeException("Full graph not created, run -c first");
     }
 
-    Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph.getPath());
+    Set<Graph> graphs = GraphSplitter.splitGraph(fullgraph);
     for (Graph graph : graphs) {
       if (graph.size() >= GraphUtils.CANDIDATE_CUTOFF) {
         graph.writeToFile("data" + SP + graph.getName() + ".txt");
@@ -108,7 +108,7 @@ public class Main {
 
     String outputPath = "data" + SP + component + "Reduced.txt";
 
-    Graph input = Graph.readFromFile(componentDir.getPath());
+    Graph input = Graph.readGraph(componentDir);
     Graph reduced = GraphReducer.reduceGraph(input);
     reduced.writeToFile(outputPath);
   }
@@ -123,12 +123,12 @@ public class Main {
       throw new IllegalArgumentException("Specified graph does not exist");
     }
 
-    new GraphSearcher(componentDir.getPath(), RESULT_DIR).searchGraph();
+    new GraphSearcher(componentDir, RESULT_DIR).searchGraph();
   }
 
   public static void main(String[] args) throws Exception {
-    // Run without command line
-    args = new String[] {"-r", "CompleteComponent"};
+    // Uncomment if not running from jar
+//    args = new String[] {"-r", "CompleteComponent"};
     
     ArrayList<String> arglist = new ArrayList<String>();
     for (String arg : args) {
@@ -188,10 +188,10 @@ public class Main {
         if (componentDir == null) {
           throw new IllegalArgumentException("Graph does not exist");
         }
-
+        
         String outputPath = RESULT_DIR + SP + component + "Graph.graphml";
 
-        Graph.readFromFile(componentDir.getPath()).writeGraphML(outputPath);
+        Graph.readGraph(componentDir).writeGraphML(outputPath);
       } catch (IndexOutOfBoundsException e) {
         throw new IllegalArgumentException("Must specify graph to run with -p");
       }
