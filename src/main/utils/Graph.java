@@ -2,6 +2,7 @@ package main.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -237,5 +238,9 @@ public class Graph {
   
   public static Graph readGraph(URL url) throws IOException {
     return readGraph(url.openStream());
+  }
+  
+  public static Graph readGraph(String filename) throws IOException {
+    return readGraph(new FileInputStream(new File(filename)));
   }
 }
