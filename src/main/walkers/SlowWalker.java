@@ -23,10 +23,11 @@ public class SlowWalker extends TwoWayWalker {
   // If set to true, we search all possible solutions. If set to false, we only find
   // the local optimum at each point. Doing local optimums gives us generally longer paths
   // but does not guarantee us to be able to find the longest
-  public static final boolean EXHAUSTIVE = false;
+  public static boolean EXHAUSTIVE_BASE = false;
 
-  private final Random random;
-  private List<CandidatePair> pairs;
+  protected final Random random;
+  protected List<CandidatePair> pairs;
+  protected boolean exhaustive;
 
   public SlowWalker(Graph graph, List<Integer> initstates, String filename,
       AtomicInteger maxLength, Lock fileLock) {
@@ -34,6 +35,7 @@ public class SlowWalker extends TwoWayWalker {
 
     this.random = new Random(System.nanoTime());
     this.pairs = new ArrayList<CandidatePair>();
+    this.exhaustive = EXHAUSTIVE_BASE;
   }
 
   protected int chooseStart() {
@@ -89,7 +91,7 @@ public class SlowWalker extends TwoWayWalker {
     }
 
     for (int x = 0; x < pairs.size(); x++) {
-      int cutoff = (EXHAUSTIVE) ? GraphUtils.CANDIDATE_CUTOFF : maxsize;
+      int cutoff = (exhaustive) ? maxLength.get() : maxsize;
       if (pairs.get(x).reachable.size() < cutoff) {
         pairs.remove(x);
         x--;

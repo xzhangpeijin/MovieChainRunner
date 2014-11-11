@@ -14,8 +14,6 @@ import main.utils.Graph;
  * At each node, the walker picks the candidate with the largest reachability set in both
  * forward and backwards directions instead of just a random one
  * 
- * Longest path is 266
- * 
  * @author Peijin Zhang
  */
 public class DeterministicWalker extends SlowWalker {

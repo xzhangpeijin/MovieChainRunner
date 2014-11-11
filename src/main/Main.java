@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import main.runners.ExperimentalRunner;
 import main.runners.GraphMaker;
 import main.runners.GraphReducer;
 import main.runners.GraphSearcher;
@@ -27,6 +28,7 @@ import main.utils.GraphUtils;
  * -d [graph]         Reduce a given graph 
  * -r [graph]         Run on given graph 
  * -p [graph]         Print a graph to graphml format
+ * -x                 Run Experimental
  * 
  * @author Peijin Zhang
  */
@@ -128,7 +130,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     // Uncomment if not running from jar
-//    args = new String[] {"-r", "CompleteComponent"};
+    args = new String[] {"-x"};
     
     ArrayList<String> arglist = new ArrayList<String>();
     for (String arg : args) {
@@ -143,6 +145,7 @@ public class Main {
       System.out.println("-d [graph]        Reduce a given graph");
       System.out.println("-r [graph]        Run on given graph");
       System.out.println("-p [graph]        Print a graph to graphml format");
+      System.out.println("-x                Run Experimental");
       return;
     }
 
@@ -195,6 +198,11 @@ public class Main {
       } catch (IndexOutOfBoundsException e) {
         throw new IllegalArgumentException("Must specify graph to run with -p");
       }
+    }
+    
+    // Run experimental
+    if (arglist.contains("-x")) {
+      ExperimentalRunner.runExperimental();
     }
   }
 }

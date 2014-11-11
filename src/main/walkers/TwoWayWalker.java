@@ -35,15 +35,11 @@ public abstract class TwoWayWalker extends Walker {
 
     this.initstates = initstates;
   }
-  
+
   /**
    * Walks one random walk onto the given path
    */
-  protected Path walkPath() {
-    Path path = new Path(graph);
-    int start = chooseStart();
-    path.appendForward(start);
-    
+  protected Path walkPath(Path path) {
     int head = path.getHead();
     int tail = path.getTail();
 
@@ -84,10 +80,17 @@ public abstract class TwoWayWalker extends Walker {
         }
       }
     }
-    
+
     return path;
   }
-  
+
+  public Path walkPath() {
+    Path path = new Path(graph);
+    int start = chooseStart();
+    path.appendForward(start);
+    return walkPath(path);
+  }
+
   private void filterCandidates(List<Candidate> candidates, Path path) {
     List<Candidate> newCandidates = new ArrayList<Candidate>(candidates.size());
     for (Candidate candidate : candidates) {
@@ -134,7 +137,7 @@ public abstract class TwoWayWalker extends Walker {
     public CandidatePair(Candidate forward, Candidate backward) {
       this.forward = forward;
       this.backward = backward;
-      
+
       reachable = new HashSet<Integer>();
       if (forward != null) {
         reachable.addAll(forward.reachable);

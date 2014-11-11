@@ -18,7 +18,7 @@ import main.utils.Path;
 public abstract class Walker implements Runnable {
   protected boolean doneWalking;
 
-  protected final Graph graph;
+  protected Graph graph;
 
   protected final AtomicInteger maxLength;
   

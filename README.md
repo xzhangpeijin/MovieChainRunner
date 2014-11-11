@@ -23,7 +23,10 @@ java -jar MovieChainRunner.jar <arguments>
  * -d [graph]        Reduce a given graph
  * -r [graph]        Run on given graph
  * -p [graph]        Print a given graph to graphml format
+ * -x                Run Experimental
 ```
+
+Note: Experimental runs most be modified by changing the source code, are meant for testing purposes only
 
 ####Data
 
