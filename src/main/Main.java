@@ -129,8 +129,8 @@ public class Main {
   }
 
   public static void main(String[] args) throws Exception {
-    // Uncomment if not running from jar
-    args = new String[] {"-x"};
+    // Uncomment here for easy testing purposes
+    //args = new String[] {"-x"};
     
     ArrayList<String> arglist = new ArrayList<String>();
     for (String arg : args) {

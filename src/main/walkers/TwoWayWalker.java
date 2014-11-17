@@ -39,7 +39,9 @@ public abstract class TwoWayWalker extends Walker {
   /**
    * Walks one random walk onto the given path
    */
-  protected Path walkPath(Path path) {
+  protected Path walkPath(Path init) {
+    Path path = new Path(init);
+    
     int head = path.getHead();
     int tail = path.getTail();
 

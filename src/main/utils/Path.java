@@ -29,6 +29,15 @@ public class Path {
     this.path = new LinkedList<Integer>();
   }
   
+  /**
+   * Copies a path
+   */
+  public Path(Path path) {
+    this.graph = path.graph;
+    this.visited = new HashSet<Integer>(path.visited);
+    this.path = new LinkedList<Integer>(path.path);
+  }
+  
   public void clear() {
     visited.clear();
     path.clear();

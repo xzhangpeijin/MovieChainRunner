@@ -14,6 +14,10 @@ import main.utils.PathUtils;
  * @author Peijin Zhang
  */
 public class ExperimentalWalker extends SlowWalker {
+  // If we're close to 25 from our longest, do extension
+  private static final int EXTENSION_CUTOFF = 25;
+  // Extend 10 times and take the best one
+  private static final int EXTENSION_ITERATIONS = 10;
 
   private final Graph reduced;
   private final Graph full;
@@ -24,16 +28,24 @@ public class ExperimentalWalker extends SlowWalker {
 
     this.reduced = reduced;
     this.full = full;
-        
+    this.exhaustive = false;
   }
 
   public Path walkPath() {
     Path small = PathUtils.convertPath(full, super.walkPath());
-
     this.graph = full;
-    Path result = super.walkPath(small);
-
+    
+    Path maxresult = small;
+    
+    if (small.size() > maxLength.get() - EXTENSION_CUTOFF) {
+      for (int x = 0; x < EXTENSION_ITERATIONS; x++) {
+        Path path = super.walkPath(small);
+        if (path.size() > maxresult.size()) {
+          maxresult = path;
+        }
+      }
+    }
     this.graph = reduced;
-    return result;
+    return maxresult;
   }
 }
